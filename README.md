@@ -5,7 +5,7 @@ Análisis de propiedad de invarianza en modelos de Rasch
 
 ¿Qué es medir en psicología? Para intentar contestar esta pregunta deberíamos ver qué propiedades tiene la medición:
 
-Sistema intervalar: sistema de asignación de números que contiene una unidad de medidas y el 0 es arbitrario. En este caso ya hablamos de medición pues se preserva una característica fundamental, que es la constancia de las diferencias de unidades en la escala. La diferencia entre 1 y 3 es igual a la diferencia de 3 y 5. Esto ocurre con la medida de temperatura, en que la diferencia entre 5 y 10 grados es igual a la de 10 y 15, para la variable de interés. Sin embargo, en este tipo de mecanismo de asignación de números, no es aplicable la razones, de modo que no es posible decir que 20 grados es el doble que 10 grados. Esto es porque el 0 es arbitrario, y no indica ausencia del atributo.
+Sistema intervalar: sistema de asignación de números que contiene una unidad de medida y el 0 es arbitrario. Podemos pensar este sistema como una escala o línea, en la que podemos ubicar una propiedad de un objeto. En este caso ya hablamos de medición pues se preserva una característica fundamental, que es la constancia de las diferencias de unidades en la escala. La diferencia entre 1 y 3 es igual a la diferencia de 3 y 5. Esto ocurre con la medida de temperatura, en que la diferencia entre 5 y 10 grados es igual a la de 10 y 15, para la variable de interés. Sin embargo, en este tipo de mecanismo de asignación de números, no es aplicable la razones, de modo que no es posible decir que 20 grados es el doble que 10 grados. Esto es porque el 0 es arbitrario, y no indica ausencia del atributo.
 
 Independencia: la otra propiedad, relacionada a lo anterior, es que la propiedad medida es independiente al objeto usado para su medición. La distancia entre las unidades de medida respecto a un objeto no depende del objeto de comparación. Del mismo modo, la distancia entre dos variables (propiedades) medidas entre objetos no dependen de la unidad de medida del instrumento de medición.
 
@@ -2008,13 +2008,17 @@ ctt_scores %>%
 
 ![](README_files/figure-markdown_github/unnamed-chunk-37-1.png)
 
-A nivel de correlación, la asociación es la misma. La única gran diferencia es en el significado del puntaje. En el caso de IRT es la misma escala, de modo que estamos comparando peras con peras. En el caso del CTT no es la misma escala, de modo que no podemos comparar el puntaje de un/una estudiante que contestó ítems difíciles con el que contextó ítems fáciles. Podemos ver que, de hecho, cuando los ítems son difíciles, la proporción de respuestas correctas baja y por tanto existe una subestimación sistemática de la proporción de correctas respecto a lo que obtendría la persona si contestara el total de los ítems. Lo mismo pero en sentido inverso ocurre cuando se contestan ítems fáciles. El problema de ello radica en que el nivel de dificultad de la prueba genera puntajes sistemáticamete distintos entre formas que no son estrictamente equivalentes. Cuando observamos la forma conformada por ítems pares e impares, obtenemos un muestreo aleatorio de ítems que resultan tener dificultad similar al total de ítems. El problema ocurre cuando no tenemos formas similares, y en muchos casos no podemos aplicar formas similares o no queremos hacerlo, o bien no queremos que un asunto problemático.
+A nivel de correlación, la asociación es la misma. La única gran diferencia es en el significado del puntaje. En el caso del modelo de Rasch (e IRT) es la misma escala, de modo que estamos comparando a las personas con una misma vara. En el caso del CTT no es la misma escala (podríamos decir que de hecho no hay una escala), de modo que no podemos comparar el puntaje de un/una estudiante que contestó ítems difíciles con el que contextó ítems fáciles. En CTT tenemos únicamente un puntaje total que corresponde a cantidad de correctas o una suma, lo cual nos sitúa en una posición observacional respecto al objeto que queremos medir. Podemos constatar que alguien contesta más preguntas que otra persona; que alguien saca más puntos y que alguien saca menos. Sabemos que quello es dependiente de la prueba, de modo que el sacar más o menos depende y es producto de la dificultad de la prueba. En el caso del ejemplo anterior, podemos ver que, de hecho, cuando los ítems son difíciles, la proporción de respuestas correctas baja y por tanto existe una subestimación sistemática de la proporción de correctas respecto a lo que obtendría la persona si contestara el total de los ítems. Lo mismo pero en sentido inverso ocurre cuando se contestan ítems fáciles. El problema de ello radica en que el nivel de dificultad de la prueba genera puntajes sistemáticamete distintos entre formas que no son estrictamente equivalentes. Cuando observamos la forma conformada por ítems pares e impares, obtenemos un muestreo aleatorio de ítems que resultan tener dificultad similar al total de ítems. El problema ocurre cuando no tenemos formas similares, y en muchos casos no podemos aplicar formas similares o no queremos tenerlas, o bien no queremos que un asunto problemático.
+
+La independencia entre la habilidad estimada y el instrumento utilizado para medirla, permite medir utilizando técnicas computacionales, como las pruebas adaptativas.
 
 # Invarianza de los parámetros de los ítems:
 
-En el caso de la CTT nos interesa tener una muestra representativa para calcular los parámetros de los ítems. En el caso del modelo de Rasch eso no es así, y deberíamos poder calcular los parámetros de los ítems con distintas muestras, con distintas características. Los parámetros de los ítems debieran ser linealmente dependientes o consistentes, de lo contrarío encontraríamos sesgo (mide de forma distinta a distintos grupos). Como corresponden a distintas calibraciones, lo que veremos es si los parámetros son consistentes o no. La consistencia se produce cuando dos escalas son equivalentes bajo una transformación lineal, tal como es el cambio de libras a kilógramos, o de millas a metros. La posibilidad de tener invarianza en la estimación de parámetros bajo una transformación lineal es una propiedad vital, porque permite generar bancos de ítems con distintas muestras, a través de un proceso de linking.
+En el caso de la CTT nos interesa tener una muestra representativa para calcular los parámetros de los ítems. En el caso del modelo de Rasch (e IRT) eso no es así, y deberíamos poder calcular los parámetros de los ítems con distintas muestras, con distintas características. Los parámetros de los ítems debieran ser linealmente dependientes o consistentes, de lo contrarío encontraríamos sesgo (mide de forma distinta a distintos grupos). Como corresponden a distintas calibraciones, lo que veremos es si los parámetros son consistentes o no
 
-Hay que considerar que el linking descansa en esta característica: la posibilidad de tener parámetros consistentes (linealmente dependientes) puesto que nos interesa preservar la distancia relativa en cada calibración.
+La consistencia se produce cuando dos escalas son equivalentes bajo una transformación lineal, tal como es el cambio de libras a kilógramos, o de millas a metros. La posibilidad de tener invarianza en la estimación de parámetros bajo una transformación lineal es una propiedad vital, porque permite generar bancos de ítems con distintas muestras, a través de un proceso de linking.
+
+Hay que considerar que el linking descansa en esta característica: la posibilidad de tener parámetros consistentes (linealmente dependientes) puesto que nos interesa preservar la distancia relativa de los ítems en cada calibración.
 
 Asumamos que tenemos personas con distinto nivel de habilidad y que van a rendir los mismos ítems:
 
@@ -2046,3 +2050,98 @@ data.frame(cbind(baja=it_pars_bh, alta=it_pars_ah)) %>% ggplot(aes(x=baja, y=alt
 ```
 
 ![](README_files/figure-markdown_github/unnamed-chunk-41-1.png)
+
+Observamos la línea recta que buscábamos. Veamolos en una tabla:
+
+``` r
+library(knitr)
+kable(data.frame(cbind(baja=it_pars_bh, alta=it_pars_ah)))
+```
+
+|          |        baja|        alta|
+|:---------|-----------:|-----------:|
+| Item\_1  |   0.2043146|  -0.5836590|
+| Item\_2  |  -0.4082582|  -1.4744453|
+| Item\_3  |   0.6598852|   0.0062826|
+| Item\_4  |  -0.1183763|  -1.2377652|
+| Item\_5  |  -0.1902523|  -1.3540739|
+| Item\_6  |  -1.1034731|  -2.1903725|
+| Item\_7  |  -0.6198793|  -1.4744453|
+| Item\_8  |  -0.0705751|  -0.7436632|
+| Item\_9  |  -1.0463417|  -1.8078225|
+| Item\_10 |   0.2524278|  -0.6414262|
+| Item\_11 |  -0.4821430|  -1.3372241|
+| Item\_12 |   0.8422311|  -0.1187705|
+| Item\_13 |  -1.5587082|  -2.3586264|
+| Item\_14 |   1.4578619|   0.6275552|
+| Item\_15 |   0.3007229|  -0.4693190|
+| Item\_16 |   0.2765503|  -0.7289607|
+| Item\_17 |   0.9093991|   0.0618677|
+| Item\_18 |  -0.0586344|  -0.9078735|
+| Item\_19 |   0.8024893|   0.1035926|
+| Item\_20 |   2.3358521|   1.1624685|
+| Item\_21 |   0.1443742|  -0.8776509|
+| Item\_22 |  -0.6836735|  -1.1890166|
+| Item\_23 |   0.2644831|  -0.7142920|
+| Item\_24 |   1.4414287|   0.6567389|
+| Item\_25 |  -0.5945852|  -1.4396014|
+| Item\_26 |   1.5938314|   0.3838193|
+| Item\_27 |  -0.4945345|  -1.5632858|
+| Item\_28 |   0.1923105|  -0.6124879|
+| Item\_29 |  -0.5318551|  -1.3710065|
+| Item\_30 |  -0.5318551|  -1.4920111|
+
+Hay una diferencia, pues efectivamente al grupo de alta habilidad le pareció que los ítems eran más fáciles. Hay que recordar no obstante que la escala es arbitraria en términos de su ubicación, y que podemos reubicarla donde queramos. Podríamos reubicar la escala del segundo grupo en términos de la escala del primer grupo, restando al segundo grupo la distancia promedio entre ambas escalas. El promedio es:
+
+``` r
+colMeans(data.frame(cbind(baja=it_pars_bh, alta=it_pars_ah)))
+```
+
+    ##       baja       alta 
+    ##  0.1061672 -0.7895158
+
+y la distancia promedio es:
+
+``` r
+difs = colMeans(data.frame(cbind(baja=it_pars_bh, alta=it_pars_ah)))
+diferencia = difs[1] - difs[2]
+```
+
+Si restamos 0.8956831 a los parámetros obtenidos por el grupo de alta habilidad obtenemos parámetros similares (no iguales) a los parámetros de la escala del grupo de baja habilidad.
+
+``` r
+kable(data.frame(cbind(baja=it_pars_bh, alta=it_pars_ah, alta_rescaled = it_pars_ah+diferencia)))
+```
+
+|          |        baja|        alta|  alta\_rescaled|
+|:---------|-----------:|-----------:|---------------:|
+| Item\_1  |   0.2043146|  -0.5836590|       0.3120241|
+| Item\_2  |  -0.4082582|  -1.4744453|      -0.5787622|
+| Item\_3  |   0.6598852|   0.0062826|       0.9019656|
+| Item\_4  |  -0.1183763|  -1.2377652|      -0.3420821|
+| Item\_5  |  -0.1902523|  -1.3540739|      -0.4583909|
+| Item\_6  |  -1.1034731|  -2.1903725|      -1.2946894|
+| Item\_7  |  -0.6198793|  -1.4744453|      -0.5787622|
+| Item\_8  |  -0.0705751|  -0.7436632|       0.1520199|
+| Item\_9  |  -1.0463417|  -1.8078225|      -0.9121394|
+| Item\_10 |   0.2524278|  -0.6414262|       0.2542568|
+| Item\_11 |  -0.4821430|  -1.3372241|      -0.4415410|
+| Item\_12 |   0.8422311|  -0.1187705|       0.7769126|
+| Item\_13 |  -1.5587082|  -2.3586264|      -1.4629434|
+| Item\_14 |   1.4578619|   0.6275552|       1.5232382|
+| Item\_15 |   0.3007229|  -0.4693190|       0.4263641|
+| Item\_16 |   0.2765503|  -0.7289607|       0.1667224|
+| Item\_17 |   0.9093991|   0.0618677|       0.9575507|
+| Item\_18 |  -0.0586344|  -0.9078735|      -0.0121905|
+| Item\_19 |   0.8024893|   0.1035926|       0.9992757|
+| Item\_20 |   2.3358521|   1.1624685|       2.0581515|
+| Item\_21 |   0.1443742|  -0.8776509|       0.0180321|
+| Item\_22 |  -0.6836735|  -1.1890166|      -0.2933335|
+| Item\_23 |   0.2644831|  -0.7142920|       0.1813911|
+| Item\_24 |   1.4414287|   0.6567389|       1.5524220|
+| Item\_25 |  -0.5945852|  -1.4396014|      -0.5439183|
+| Item\_26 |   1.5938314|   0.3838193|       1.2795024|
+| Item\_27 |  -0.4945345|  -1.5632858|      -0.6676028|
+| Item\_28 |   0.1923105|  -0.6124879|       0.2831952|
+| Item\_29 |  -0.5318551|  -1.3710065|      -0.4753234|
+| Item\_30 |  -0.5318551|  -1.4920111|      -0.5963281|
