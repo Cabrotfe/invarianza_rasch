@@ -2179,7 +2179,7 @@ set_items2 = matrix(rnorm(50, -1, 1.5), ncol=1) ## ítems distintos
 set_items2 = data.frame(set_items2) %>% mutate(numero = row_number()) %>% slice(-n_anchor)
 names(set_items2)[1] = "item"
 
-set_items2 = bind_rows(set_items2, anchor, .id = "group") %>% mutate(group = ifelse(group==1, "test2", "ancla")) %>% arrange(numero)
+set_items2 = bind_rows(set_items2, anchor, .id = "group") %>% mutate(group = ifelse(group==1, "test2", "ancla")) %>% arrange(numero) ## Acá incerté los parámetros de los ítems ancla
 ```
 
 Veamos los parámetros de los ítems, y si estos son o no son ancla:
@@ -2247,10 +2247,13 @@ Ahora, hagamos la simulación de los datos:
 ``` r
 library(mirt)
 theta = matrix(rnorm(400, 0, 1),ncol=1)
-theta2 = matrix(rnorm(400, 1, 0), ncol=1)
+theta2 = matrix(rnorm(400, 1, 1.5), ncol=1)
 
 prueba1 = simdata(Theta = theta, a=a, d=set_items1, itemtype = "2PL")
 prueba2 = simdata(Theta = theta2, a=a, d=matrix(set_items2$item, ncol=1), itemtype = "2PL")  ## test2
+
+prueba1=data.frame(prueba1)
+prueba2=data.frame(prueba2)
 ```
 
 Cambiemos los nombres a los ítems para poder estimar los parámetros de los ítems:
@@ -2266,6 +2269,322 @@ names(prueba2)[-n_anchor] = paste0("t2",colnames(prueba1[,-n_anchor]))
 Estimación de los parámetros:
 
 ``` r
-params_test1 = mirt(prueba1, itemtype = "Rasch", model = 1)
-params_test2 = mirt(prueba2, itemtype = "Rasch", model = 1)
+params_test1 = mirt(prueba1, itemtype = "Rasch", model = 1, SE=T)
+params_test2 = mirt(prueba2, itemtype = "Rasch", model = 1, SE=T)
 ```
+
+Tenemos los parámetros estimados con ambas muestras, las cuales son sistemáticamente distintas. Comparten, no obstante, ítems en común en sus pruebas, y ello nos va a permitir generar una escala común.
+
+``` r
+beta1 = coef(params_test1, IRTpars = T, simplify = T)$items[,2]
+beta2 = coef(params_test2, IRTpars = T, simplify = T)$items[,2]
+knitr::kable(data.frame(cbind(beta1, beta2)))
+```
+
+|               |       beta1|       beta2|
+|:--------------|-----------:|-----------:|
+| Item\_1anc1   |  -0.5139122|  -1.4634575|
+| t1Item\_2     |  -0.8481755|  -3.0897386|
+| Item\_3anc3   |   0.0435231|  -0.9366597|
+| Item\_4anc4   |   0.6705987|  -0.5076498|
+| t1Item\_5     |  -0.6143995|   0.9914437|
+| t1Item\_6     |   1.8044921|  -0.6121024|
+| Item\_7anc7   |  -0.6270878|  -2.0703412|
+| t1Item\_8     |   0.4436718|  -1.2853622|
+| Item\_9anc9   |   0.1756101|  -0.6121024|
+| t1Item\_10    |   0.8145917|   3.5351300|
+| t1Item\_11    |   0.2359485|  -0.2592703|
+| t1Item\_12    |  -1.7661659|   1.7980647|
+| t1Item\_13    |  -0.4395856|  -0.7488842|
+| Item\_14anc14 |  -0.6398068|  -1.5562172|
+| Item\_15anc15 |   0.8012953|  -0.3026638|
+| t1Item\_16    |  -1.0259934|   2.6295556|
+| t1Item\_17    |   0.9640556|  -1.5002387|
+| t1Item\_18    |   0.4066460|  -2.0703412|
+| t1Item\_19    |  -1.0969848|  -0.9686622|
+| Item\_20anc20 |  -0.4027044|  -1.3027682|
+| t1Item\_21    |  -0.8884348|  -0.3026638|
+| Item\_22anc22 |  -1.5667485|  -2.6323535|
+| t1Item\_23    |   0.5559982|   1.5551916|
+| t1Item\_24    |   1.6535498|  -3.5054710|
+| Item\_25anc25 |   1.5299457|   0.5135411|
+| Item\_26anc26 |  -1.6731239|  -3.0897386|
+| t1Item\_27    |   0.4189673|  -1.0496750|
+| t1Item\_28    |  -0.4766490|   1.1172366|
+| t1Item\_29    |  -0.7819812|  -0.4780731|
+| t1Item\_30    |   0.1274972|  -1.6324626|
+| Item\_31anc31 |  -0.8481755|  -1.7911198|
+| Item\_32anc32 |  -2.1690528|  -3.8170793|
+| t1Item\_33    |  -1.8638447|   0.3550709|
+| t1Item\_34    |  -1.5841127|  -3.6535600|
+| t1Item\_35    |  -0.3051161|  -1.5002387|
+| t1Item\_36    |  -0.4890469|  -2.6914909|
+| t1Item\_37    |   0.2844209|  -1.1489655|
+| t1Item\_38    |   1.6902380|   0.3264312|
+| t1Item\_39    |  -1.8241728|  -0.8575798|
+| t1Item\_40    |   0.0914811|  -1.2165515|
+| t1Item\_41    |  -1.1258479|   1.3129808|
+| Item\_42anc42 |   2.2212606|   1.3634859|
+| Item\_43anc43 |   1.0059555|  -0.0156244|
+| Item\_44anc44 |  -0.9980337|  -2.4376847|
+| t1Item\_45    |  -0.7819812|   1.2631455|
+| t1Item\_46    |  -1.4819189|  -1.3732578|
+| t1Item\_47    |   1.2396679|   0.6008849|
+| t1Item\_48    |  -0.6017413|  -3.6026550|
+| t1Item\_49    |  -0.4890469|   0.8082684|
+| t1Item\_50    |   1.1498068|   1.0854722|
+
+Los ítems ancla no tienen los mismos parámetros, porque las personas que contestaron los ítems son distintas. Lo podemos verlo con un mapa de Wright.
+
+``` r
+f_score_test1 = fscores(params_test1)[,"F1"]
+f_score_test2 = fscores(params_test2)[,"F1"]
+
+
+anchor1 = coef(params_test1, IRTpars = T, simplify=T)$items[n_anchor,2]
+anchor2 = coef(params_test2, IRTpars = T, simplify=T)$items[n_anchor,2]
+```
+
+``` r
+WrightMap::wrightMap(thetas = f_score_test1, thresholds = anchor1, show.thr.lab = FALSE, label.items.srt = 45, main.title = "Ítems ancla en test 1")
+```
+
+![](README_files/figure-markdown_github/unnamed-chunk-53-1.png)
+
+    ##                     [,1]
+    ## Item_1anc1   -0.51391223
+    ## Item_3anc3    0.04352311
+    ## Item_4anc4    0.67059871
+    ## Item_7anc7   -0.62708776
+    ## Item_9anc9    0.17561015
+    ## Item_14anc14 -0.63980683
+    ## Item_15anc15  0.80129533
+    ## Item_20anc20 -0.40270442
+    ## Item_22anc22 -1.56674845
+    ## Item_25anc25  1.52994569
+    ## Item_26anc26 -1.67312387
+    ## Item_31anc31 -0.84817552
+    ## Item_32anc32 -2.16905279
+    ## Item_42anc42  2.22126059
+    ## Item_43anc43  1.00595553
+    ## Item_44anc44 -0.99803371
+
+``` r
+WrightMap::wrightMap(thetas = f_score_test2, thresholds = anchor2, show.thr.lab = FALSE, label.items.srt = 45, main.title = "Ítems ancla en test 2")
+```
+
+![](README_files/figure-markdown_github/unnamed-chunk-54-1.png)
+
+    ##                     [,1]
+    ## Item_1anc1   -1.46345748
+    ## Item_3anc3   -0.93665971
+    ## Item_4anc4   -0.50764981
+    ## Item_7anc7   -2.07034121
+    ## Item_9anc9   -0.61210244
+    ## Item_14anc14 -1.55621723
+    ## Item_15anc15 -0.30266379
+    ## Item_20anc20 -1.30276820
+    ## Item_22anc22 -2.63235351
+    ## Item_25anc25  0.51354111
+    ## Item_26anc26 -3.08973860
+    ## Item_31anc31 -1.79111979
+    ## Item_32anc32 -3.81707931
+    ## Item_42anc42  1.36348590
+    ## Item_43anc43 -0.01562441
+    ## Item_44anc44 -2.43768471
+
+En el test 2 los ítems ancla resultaron más fáciles, lo que típicamente observaríamos en escalamiento vertical.
+
+### Linking propiamente tal:
+
+Lo anterior fue simular datos, estimar parámetros y graficar los resultados. Ahora vamos a hacer el linking.
+
+``` r
+library(equateIRT)
+forma1 = import.mirt(params_test1) ## Los extrae ocupando los parámetros como en el modelo de regresión, no en nomenclatura IRT
+```
+
+    ##              value.d  SE.d
+    ## Item_1anc1     0.514 0.122
+    ## t1Item_2       0.848 0.126
+    ## Item_3anc3    -0.044 0.120
+    ## Item_4anc4    -0.671 0.124
+    ## t1Item_5       0.614 0.123
+    ## t1Item_6      -1.804 0.149
+    ## Item_7anc7     0.627 0.123
+    ## t1Item_8      -0.444 0.122
+    ## Item_9anc9    -0.176 0.120
+    ## t1Item_10     -0.815 0.125
+    ## t1Item_11     -0.236 0.120
+    ## t1Item_12      1.766 0.147
+    ## t1Item_13      0.440 0.121
+    ## Item_14anc14   0.640 0.123
+    ## Item_15anc15  -0.801 0.125
+    ## t1Item_16      1.026 0.128
+    ## t1Item_17     -0.964 0.128
+    ## t1Item_18     -0.407 0.121
+    ## t1Item_19      1.097 0.130
+    ## Item_20anc20   0.403 0.121
+    ## t1Item_21      0.888 0.126
+    ## Item_22anc22   1.567 0.141
+    ## t1Item_23     -0.556 0.122
+    ## t1Item_24     -1.654 0.144
+    ## Item_25anc25  -1.530 0.140
+    ## Item_26anc26   1.673 0.144
+    ## t1Item_27     -0.419 0.121
+    ## t1Item_28      0.477 0.122
+    ## t1Item_29      0.782 0.125
+    ## t1Item_30     -0.127 0.120
+    ## Item_31anc31   0.848 0.126
+    ## Item_32anc32   2.169 0.162
+    ## t1Item_33      1.864 0.150
+    ## t1Item_34      1.584 0.141
+    ## t1Item_35      0.305 0.121
+    ## t1Item_36      0.489 0.122
+    ## t1Item_37     -0.284 0.121
+    ## t1Item_38     -1.690 0.145
+    ## t1Item_39      1.824 0.149
+    ## t1Item_40     -0.091 0.120
+    ## t1Item_41      1.126 0.130
+    ## Item_42anc42  -2.221 0.165
+    ## Item_43anc43  -1.006 0.128
+    ## Item_44anc44   0.998 0.128
+    ## t1Item_45      0.782 0.125
+    ## t1Item_46      1.482 0.138
+    ## t1Item_47     -1.240 0.133
+    ## t1Item_48      0.602 0.123
+    ## t1Item_49      0.489 0.122
+    ## t1Item_50     -1.150 0.131
+    ## 
+    ## NOTE: Use the modIRT function to transform parameters in the usual IRT parameterization
+
+``` r
+forma2 = import.mirt(params_test2)
+```
+
+    ##              value.d  SE.d
+    ## Item_1anc1     1.463 0.156
+    ## t2t1Item_2     3.090 0.209
+    ## Item_3anc3     0.937 0.148
+    ## Item_4anc4     0.508 0.144
+    ## t2t1Item_5    -0.991 0.147
+    ## t2t1Item_6     0.612 0.145
+    ## Item_7anc7     2.070 0.170
+    ## t2t1Item_8     1.285 0.153
+    ## Item_9anc9     0.612 0.145
+    ## t2t1Item_10   -3.535 0.236
+    ## t2t1Item_11    0.259 0.143
+    ## t2t1Item_12   -1.798 0.160
+    ## t2t1Item_13    0.749 0.146
+    ## Item_14anc14   1.556 0.158
+    ## Item_15anc15   0.303 0.143
+    ## t2t1Item_16   -2.630 0.186
+    ## t2t1Item_17    1.500 0.157
+    ## t2t1Item_18    2.070 0.170
+    ## t2t1Item_19    0.969 0.149
+    ## Item_20anc20   1.303 0.154
+    ## t2t1Item_21    0.303 0.143
+    ## Item_22anc22   2.632 0.189
+    ## t2t1Item_23   -1.555 0.155
+    ## t2t1Item_24    3.505 0.232
+    ## Item_25anc25  -0.514 0.143
+    ## Item_26anc26   3.090 0.209
+    ## t2t1Item_27    1.050 0.150
+    ## t2t1Item_28   -1.117 0.148
+    ## t2t1Item_29    0.478 0.144
+    ## t2t1Item_30    1.632 0.160
+    ## Item_31anc31   1.791 0.163
+    ## Item_32anc32   3.817 0.254
+    ## t2t1Item_33   -0.355 0.143
+    ## t2t1Item_34    3.654 0.242
+    ## t2t1Item_35    1.500 0.157
+    ## t2t1Item_36    2.691 0.191
+    ## t2t1Item_37    1.149 0.151
+    ## t2t1Item_38   -0.326 0.143
+    ## t2t1Item_39    0.858 0.148
+    ## t2t1Item_40    1.217 0.152
+    ## t2t1Item_41   -1.313 0.151
+    ## Item_42anc42  -1.363 0.152
+    ## Item_43anc43   0.016 0.142
+    ## Item_44anc44   2.438 0.182
+    ## t2t1Item_45   -1.263 0.150
+    ## t2t1Item_46    1.373 0.155
+    ## t2t1Item_47   -0.601 0.144
+    ## t2t1Item_48    3.603 0.239
+    ## t2t1Item_49   -0.808 0.145
+    ## t2t1Item_50   -1.085 0.148
+    ## 
+    ## NOTE: Use the modIRT function to transform parameters in the usual IRT parameterization
+
+La siguiente tabla indica que hay 16 ítems en común (porque tienen el mismo nombre).
+
+``` r
+linkp(coef = list(forma1$coef, forma2$coef)) ## Este es el plan!
+```
+
+    ##      [,1] [,2]
+    ## [1,]   50   16
+    ## [2,]   16   50
+
+``` r
+modelo_eq_rasch = modIRT(coef=list(forma1$coef, forma2$coef),
+       var = list(forma1$var,forma2$var),
+       names = c("f1","f2"))
+```
+
+``` r
+eq_vert = alldirec(mods = modelo_eq_rasch, method = "mean-mean")
+summary(eq_vert)
+```
+
+    ## Link: f1.f2 
+    ## Method: mean-mean 
+    ## Equating coefficients:
+    ##   Estimate  StdErr
+    ## A   1.0000 0.00000
+    ## B  -1.1042 0.10394
+    ## 
+    ## 
+    ## Link: f2.f1 
+    ## Method: mean-mean 
+    ## Equating coefficients:
+    ##   Estimate  StdErr
+    ## A   1.0000 0.00000
+    ## B   1.1042 0.10394
+
+Nuestro valor **B** es .94791, lo cual indica que podemos poner los ítems en la misma escala (en términos del primer test) sumando el valor anterior a los parámetros y a los valores theta obtenidos en el test 2. Al sumar .94 a los parámetros del test 2 obtenemos los siguientes:
+
+``` r
+B = .94791
+params_test2_corregido = coef(params_test2, IRTpars = T, simplify=T)$items[,2] + B
+kable(data.frame(cbind(anchor1, params_test2_corregido[n_anchor])))
+```
+
+|               |     anchor1|          V2|
+|:--------------|-----------:|-----------:|
+| Item\_1anc1   |  -0.5139122|  -0.5155475|
+| Item\_3anc3   |   0.0435231|   0.0112503|
+| Item\_4anc4   |   0.6705987|   0.4402602|
+| Item\_7anc7   |  -0.6270878|  -1.1224312|
+| Item\_9anc9   |   0.1756101|   0.3358076|
+| Item\_14anc14 |  -0.6398068|  -0.6083072|
+| Item\_15anc15 |   0.8012953|   0.6452462|
+| Item\_20anc20 |  -0.4027044|  -0.3548582|
+| Item\_22anc22 |  -1.5667485|  -1.6844435|
+| Item\_25anc25 |   1.5299457|   1.4614511|
+| Item\_26anc26 |  -1.6731239|  -2.1418286|
+| Item\_31anc31 |  -0.8481755|  -0.8432098|
+| Item\_32anc32 |  -2.1690528|  -2.8691693|
+| Item\_42anc42 |   2.2212606|   2.3113959|
+| Item\_43anc43 |   1.0059555|   0.9322856|
+| Item\_44anc44 |  -0.9980337|  -1.4897747|
+
+Vemos que hay una asociación lineal fuerte, por lo que nos quedamos tranquilos con el resultado del proceso de linking
+
+``` r
+plot(anchor1, params_test2_corregido[n_anchor])
+```
+
+![](README_files/figure-markdown_github/unnamed-chunk-60-1.png)
+
+Los resultados no son exactos, pero podemos aceptar la diferencia encontrada

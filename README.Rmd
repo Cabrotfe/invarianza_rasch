@@ -481,7 +481,7 @@ set_items2 = matrix(rnorm(50, -1, 1.5), ncol=1) ## ítems distintos
 set_items2 = data.frame(set_items2) %>% mutate(numero = row_number()) %>% slice(-n_anchor)
 names(set_items2)[1] = "item"
 
-set_items2 = bind_rows(set_items2, anchor, .id = "group") %>% mutate(group = ifelse(group==1, "test2", "ancla")) %>% arrange(numero)
+set_items2 = bind_rows(set_items2, anchor, .id = "group") %>% mutate(group = ifelse(group==1, "test2", "ancla")) %>% arrange(numero) ## Acá incerté los parámetros de los ítems ancla
 ```
 
 Veamos los parámetros de los ítems, y si estos son o no son ancla:
@@ -497,10 +497,13 @@ Ahora, hagamos la simulación de los datos:
 ```{r}
 library(mirt)
 theta = matrix(rnorm(400, 0, 1),ncol=1)
-theta2 = matrix(rnorm(400, 1, 0), ncol=1)
+theta2 = matrix(rnorm(400, 1, 1.5), ncol=1)
 
 prueba1 = simdata(Theta = theta, a=a, d=set_items1, itemtype = "2PL")
 prueba2 = simdata(Theta = theta2, a=a, d=matrix(set_items2$item, ncol=1), itemtype = "2PL")  ## test2
+
+prueba1=data.frame(prueba1)
+prueba2=data.frame(prueba2)
 ```
 
 Cambiemos los nombres a los ítems para poder estimar los parámetros de los ítems:
@@ -511,14 +514,97 @@ names(prueba2)[n_anchor] = paste0(colnames(prueba2[,n_anchor]), "anc", n_anchor)
 
 names(prueba1)[-n_anchor] = paste0("t1",colnames(prueba1[,-n_anchor]))
 names(prueba2)[-n_anchor] = paste0("t2",colnames(prueba1[,-n_anchor]))
+
 ```
 
 Estimación de los parámetros:
 
 ```{r, results='hide'}
-params_test1 = mirt(prueba1, itemtype = "Rasch", model = 1)
-params_test2 = mirt(prueba2, itemtype = "Rasch", model = 1)
+params_test1 = mirt(prueba1, itemtype = "Rasch", model = 1, SE=T)
+params_test2 = mirt(prueba2, itemtype = "Rasch", model = 1, SE=T)
 ```
+
+Tenemos los parámetros estimados con ambas muestras, las cuales son sistemáticamente distintas. Comparten, no obstante, ítems en común en sus pruebas, y ello nos va a permitir generar una escala común.
+
+```{r}
+beta1 = coef(params_test1, IRTpars = T, simplify = T)$items[,2]
+beta2 = coef(params_test2, IRTpars = T, simplify = T)$items[,2]
+knitr::kable(data.frame(cbind(beta1, beta2)))
+```
+
+Los ítems ancla no tienen los mismos parámetros, porque las personas que contestaron los ítems son distintas. Lo podemos verlo con un mapa de Wright.
+
+```{r}
+f_score_test1 = fscores(params_test1)[,"F1"]
+f_score_test2 = fscores(params_test2)[,"F1"]
+
+
+anchor1 = coef(params_test1, IRTpars = T, simplify=T)$items[n_anchor,2]
+anchor2 = coef(params_test2, IRTpars = T, simplify=T)$items[n_anchor,2]
+```
+
+
+
+```{r}
+WrightMap::wrightMap(thetas = f_score_test1, thresholds = anchor1, show.thr.lab = FALSE, label.items.srt = 45, main.title = "Ítems ancla en test 1")
+```
+
+
+```{r}
+WrightMap::wrightMap(thetas = f_score_test2, thresholds = anchor2, show.thr.lab = FALSE, label.items.srt = 45, main.title = "Ítems ancla en test 2")
+```
+
+En el test 2 los ítems ancla resultaron más fáciles, lo que típicamente observaríamos en escalamiento vertical. 
+
+### Linking propiamente tal:
+
+Lo anterior fue simular datos, estimar parámetros y graficar los resultados. Ahora vamos a hacer el linking.
+
+```{r}
+library(equateIRT)
+forma1 = import.mirt(params_test1) ## Los extrae ocupando los parámetros como en el modelo de regresión, no en nomenclatura IRT
+forma2 = import.mirt(params_test2)
+```
+
+La siguiente tabla indica que hay 16 ítems en común (porque tienen el mismo nombre).
+
+```{r}
+linkp(coef = list(forma1$coef, forma2$coef)) ## Este es el plan!
+```
+
+
+
+```{r, results='hide'}
+modelo_eq_rasch = modIRT(coef=list(forma1$coef, forma2$coef),
+       var = list(forma1$var,forma2$var),
+       names = c("f1","f2"))
+```
+
+
+
+```{r}
+eq_vert = alldirec(mods = modelo_eq_rasch, method = "mean-mean")
+summary(eq_vert)
+```
+
+Nuestro valor **B** es .94791, lo cual indica que podemos poner los ítems en la misma escala (en términos del primer test) sumando el valor anterior a los parámetros y a los valores theta obtenidos en el test 2. Al sumar .94 a los parámetros del test 2 obtenemos los siguientes:
+
+
+
+```{r}
+B = .94791
+params_test2_corregido = coef(params_test2, IRTpars = T, simplify=T)$items[,2] + B
+kable(data.frame(cbind(anchor1, params_test2_corregido[n_anchor])))
+```
+
+Vemos que hay una asociación lineal fuerte, por lo que nos quedamos tranquilos con el resultado del proceso de linking
+
+```{r}
+plot(anchor1, params_test2_corregido[n_anchor])
+```
+
+Los resultados no son exactos, pero podemos aceptar la diferencia encontrada
+
 
 
 
