@@ -15,9 +15,10 @@ pacman::p_load(mirt, mirtCAT, tidyverse, ggpubr)
 ¿Qué es medir en psicología? Para intentar contestar esta pregunta deberíamos ver qué propiedades tiene la medición:
 
 
-**Sistema intervalar:** sistema de asignación de números que contiene una unidad de medida y el 0 es arbitrario. Podemos pensar este sistema como una escala o línea, en la que podemos ubicar una propiedad de un objeto. En este caso ya hablamos de medición pues se preserva una característica fundamental, que es la constancia de las diferencias de unidades en la escala. La diferencia entre 1 y 3 es igual a la diferencia de 3 y 5. Esto ocurre con la medida de temperatura, en que la diferencia entre 5 y 10 grados es igual a la de 10 y 15, para la variable de interés. Sin embargo, en este tipo de mecanismo de asignación de números, no es aplicable la razones, de modo que no es posible decir que 20 grados es el doble que 10 grados. Esto es porque el 0 es arbitrario, y no indica ausencia del atributo. Como veremos, esta característica es exclusiva del modelo de Rasch, y lo distingue de otros modelos IRT (2PL y 3 PL).
+**Sistema intervalar:** sistema de asignación de números que contiene una unidad de medida y el 0 es arbitrario. Podemos pensar este sistema como una escala o línea, en la que podemos ubicar una propiedad de un objeto. En este caso ya hablamos de medición pues se preserva una característica fundamental, que es la constancia de las diferencias de unidades en la escala. La diferencia entre 1 y 3 es igual a la diferencia de 3 y 5. Esto ocurre con, por ejemplo, la medida de temperatura, en que la diferencia entre 5 y 10 grados es igual a la de 10 y 15, para la variable de interés. Sin embargo, en este tipo de mecanismo de asignación de números, no son aplicables las razones (dividir un número por otro), de modo que no es posible decir que 20 grados es el doble que 10 grados. Esto es porque el 0 es arbitrario, y no indica ausencia del atributo. Como veremos, esta característica es exclusiva del modelo de Rasch, y lo distingue de otros modelos IRT (2PL y 3 PL).
 
-**Independencia:** la otra característica de la medición, relacionada a lo anterior, es que la propiedad medida es independiente al objeto usado para su medición. La distancia entre las unidades de medida (de la escala) respecto a un objeto (en este caso el atributo de la persona) no depende del objeto de comparación (de la persona). Del mismo modo, la distancia entre dos variables (propiedades) medidas entre objetos no dependen de la unidad de medida del instrumento de medición.
+**Independencia:** la otra característica de la medición, relacionada a lo anterior, es que la propiedad medida es independiente al objeto usado para su medición. La ubicación en la escala de la propiedad (atributo) de un objeto (de una persona) no depende del instrumento utilizado, sino que es independiente de este. Así, se puede demostrar que es posible dar la misma ubicación en la escala a una persona utilizando distintos instrumentos, siempre y cuando estos instrumentos estén calibrados en la misma escala (estén midiendo el mismo constructo). Del mismo modo, la distancia entre dos ítems (elementos de la escala) no depende del atributo de las personas que se utilisen para establecer esta distancia o diferencia. Dos ítems están a dos logits de distancia, para cualquier persona medida o grupo utilizado para establecer esta distancia.
+
 
 **Linealidad:** debe poder expresarse en una línea que indica la ubicación del objeto medido.
 
@@ -30,9 +31,11 @@ Veamos cómo el modelo de Rasch permite medir y en qué sentido la TCT no permit
 
 ## Invarianza de los parámetros de las personas:
 
-Dado un nivel de habilidad, el modelo de Rasch (y el IRT) permite estimar ese nivel de habilidad usando distintos ítems, debido a que considera la dificultad (y la discriminación) o ubicación de los ítems al hacer la medición. Así, no es lo mismo para estimar la habilidad contestar ítems fáciles que difíciles, y puede ser que, por ejemplo, al contestar 4 ítems difíciles sea equivalente a contestar 12 fáciles. Para ello debo estimar la habilidad considerando la ubicación de los ítems.
+Dado un nivel de habilidad, el modelo de Rasch (y el IRT) permite estimar ese nivel de habilidad usando distintos ítems, debido a que considera la dificultad (y la discriminación) o ubicación de los ítems al hacer la estimación de la habilidad (estimación de la ubicación del atributo en una escala). Así, no es lo mismo para estimar la habilidad contestar ítems fáciles que difíciles, y puede ser que, por ejemplo, contestar 4 ítems difíciles sea equivalente a contestar 12 fáciles. Para ello se debe estimar la habilidad considerando la ubicación de los ítems.
+
 ¿Para qué sirve esto?
-Sirve para estimar la habilidad usando distintos ítems, incluso si estos no son versiones paralelas o utilizan distinto número de ítems o incluso un número variable de ítems. Veamos un ejemplo:
+
+Sirve para estimar la habilidad usando distintos ítems, incluso si estos no son versiones paralelas. También permite estimar habilidades de forma equivalente (bajo una misma escala) pero usando un número diferente de ítems. Veamos un ejemplo:
 
 Supongamos que las personas contestan dos formas de una pruena, pero una es fácil y otra difícil:
 
@@ -67,7 +70,7 @@ sjPlot::sjt.itemanalysis(prueba_facil)
 sjPlot::sjt.itemanalysis(prueba_dificil)
 ```
 
-Para ello podemos hacer un gráfico de Guttman:
+Para ello podemos graficar la Curva Característica Empírica del Ítem:
 
 ```{r}
 empirical_plot(prueba_facil, which.items=1:n, main = "Prueba fácil")
@@ -91,23 +94,23 @@ Los sujetos tienen la misma habilidad (son los mismos sujetos) pero contestaron 
 
 ```{r}
 data.frame(cbind(facil = fscores(mod_p_facil)[,1], dificil = fscores(mod_p_dificil)[,1])) %>% 
-  ggplot(aes(x=facil, y=dificil)) + geom_point() + geom_smooth()
+  ggplot(aes(x=facil, y=dificil)) + geom_point() + geom_smooth() + theme_bw()
 ```
 
 Veamos qué pasa si sumamos los puntajes:
 
 ```{r}
 data.frame(facil = rowSums(prueba_facil) , dificil= rowSums(prueba_dificil) ) %>% 
-  ggplot(aes(x=facil, y=dificil)) + geom_point() + geom_smooth()
+  ggplot(aes(x=facil, y=dificil)) + geom_point() + geom_smooth() + theme_bw()
 ```
 
 
-Lo que ocurre es que los puntajes obtenidos con un instrumento no mantienen la forma lineal respecto a los puntajes obtenidos con otro instrumento. Por ejemplo, la diferencia entre obtener 0 a 10 puntos, en la prueba difícil, equivale a obtener una diferencia de 0 a 5 puntos, aproximadamente en la prueba difícil. En cambio, una diferencia de 20 a 30 puntos equivale a una diferencia de más o menos 8 puntos en la prueba difícil.
+Lo que ocurre es que los puntajes obtenidos con un instrumento no mantienen la forma lineal respecto a los puntajes obtenidos con otro instrumento. Por ejemplo, la diferencia entre obtener 0 a 10 puntos, en la prueba difícil, equivale a obtener una diferencia de 0 a 5 puntos, aproximadamente en la prueba difícil. En cambio, una diferencia de 20 a 30 puntos equivale a una diferencia de más o menos 8 puntos en la prueba difícil. Sí bien podemos observar que en el modelo de Rasch obtenemos una tendencia lineal, no observamos una línea recta de puntos. Esto nos advierte sobre otro asunto, que ningún modelo puede soslayar: "la presencia de error de medición".
 
 
 ## Segundo ejemplo, con más ítems:
 
-Para mostrar la propiedad de invarianza (la no dependencia) de la propiedad medida respecto al objeto medido, vamos a poner una situación más favorable (más estable), en la que hay más información. En este caso, más ítems es más información (mayor certeza de la ubicación de las personas o bien de su puntaje total) para cada uno de los tests
+Para mostrar la propiedad de invarianza (la no dependencia) de la propiedad medida respecto al objeto medido, vamos a poner una situación más favorable (más estable, y con menor error de medición), en la que hay más información. En este caso, más ítems es más información (mayor certeza de la ubicación de las personas o bien de su puntaje total) para cada uno de los tests
 
 ```{r}
 set.seed(10)
@@ -121,6 +124,7 @@ thet = matrix(rnorm(400, 0, 1), ncol=1)
 
 
 ```{r}
+set.seed(1238)
 prueba_facil=simdata(Theta = thet, a=a1, d=d1, itemtype = "2PL")
 prueba_dificil=simdata(Theta = thet, a=a1, d=d2, itemtype = "2PL")
 ```
@@ -136,26 +140,26 @@ mod_p_facil = mirt(model=1, itemtype = "Rasch", data=prueba_facil, SE=T)
 mod_p_dificil = mirt(model=1, itemtype = "Rasch", data=prueba_dificil, SE=T)
 ```
 
-Si tenemos 150 ítems en cada una de las pruebas, es claro lo que ocurre. El modelo de Rasch permite obtener medidas consistentes, en donde lo que cambia es la escala de medida pero no la ubicación de los individuos relativa a esa escala. Así, tal como cuando medimos en grados celsius o grados fahrenheit estamos midiendo la misma propiedad en escalas equivalentes, en el caso de un modelo de Rasch, bien ajustado, nos permite observar la misma relación.
+Si tenemos 150 ítems en cada una de las pruebas, es claro lo que ocurre. El modelo de Rasch permite obtener medidas equivalentes, en donde lo que cambia es la parte de la escala de medida que estamos utilizando, pero no la escala en sí. La ubicación de los individuos es la misma.
 
 
 ```{r}
 data.frame(cbind(facil = fscores(mod_p_facil)[,1], dificil = fscores(mod_p_dificil)[,1])) %>% 
   ggscatter(x="facil", y = "dificil")+
-  stat_cor(method = "pearson", label.x = 0, label.y = 3) + geom_smooth()
+  stat_cor(method = "pearson", label.x = 0, label.y = 3) + geom_smooth() + theme_bw()
 ```
 
 
-En el caso de los puntajes observados, lo que ocurre queda demostrado con mayor evidencia. La distancia entre los puntajes en una escala no son equivalentes a los de otra escala. Esta falta de equivalencia impide, por ejemplo, hacer comparaciones utilizando distintos ítems para evaluar distintas personas.
+En el caso de los puntajes observados, lo que ocurre queda demostrado con mayor evidencia. La distancia entre los puntajes en una escala no son equivalentes a los de otra escala. Esta falta de equivalencia impide, por ejemplo, hacer comparaciones utilizando distintos ítems para evaluar a distintas personas.
 
 ```{r}
 data.frame(facil = rowSums(prueba_facil) , dificil= rowSums(prueba_dificil) ) %>% 
   ggscatter(x="facil", y = "dificil") +
-  stat_cor(method = "pearson", label.x = 20, label.y = 60) + geom_smooth()
+  stat_cor(method = "pearson", label.x = 20, label.y = 60) + geom_smooth() + theme_bw()
 ```
 
 
-Lo que estamos mostrando en el caso del modelo de Rasch, es que podemos calibrar distintos ítems (construir escalas) con pruebas distintas y obtener escalas equivalentes. En este caso, las habilidades de los sujetos son las mismas y ello genera que las escalas de medida estén corridas respecto a la misma muestra (una tiene parámetros de dificultad más altos), y ello genera que en la estimación de la habilidad, la ubicación de las personas considere esta diferencia de dificultad, de modo que el modelo permite ubicar a la persona en el mismo lugar (o en un lugar cercano a) el lugar determinado por la otra escala (de la prueba fácil, que corresponde a otra calibración).
+Lo que estamos mostrando en el caso del modelo de Rasch, es que podemos calibrar distintos ítems (construir escalas) con pruebas distintas y obtener escalas equivalentes. En este caso, las habilidades de los sujetos son las mismas y ello genera que las escalas de medida estén construidas respecto a la misma muestra, aunque con distintos parámetros y ubicaciones (una tiene parámetros de dificultad más altos). Ello genera que en la estimación de la habilidad, el proceso de ubicar a las personas en la escala considere esta diferencia de dificultad, de modo que el modelo permite ubicar a la persona en el mismo lugar (o en un lugar cercano) que aquel determinado por la otra escala (de la prueba fácil, que corresponde a otra calibración).
 
 
 ```{r}
@@ -168,7 +172,7 @@ Veamos qué pasa con la suma de puntajes como método de puntuación:
 data.frame(facil = rowSums(prueba_facil) , dificil= rowSums(prueba_dificil) ) %>% gather(key=prueba, value=medición) %>% ggdensity(x="medición",fill = "prueba", add = "mean") + labs(title="Distribución de habilidades usando Puntajes")
 ```
 
-Lamentablemente en este último caso vemos que los puntajes se distribuyen de modos diferentes dependiendo de la prueba de que se rinde, a pesar de que las personas tienen la misma habilidad. Así, la puntuación es dependiente de la dificultad, y no la considera para la estimación de las habilidades. En el modelo de Rasch (e IRT) la estimación de la habilidad es un proceso en el cual se considera la dificultad (la ubicación del ítem en la escala) de modo que la ubicación del atributo medido se determina considerando la ubicación de los ítems.
+Lamentablemente en este último caso vemos que los puntajes se distribuyen de modos diferentes dependiendo de la prueba de que se rinde, a pesar de que las personas tienen la misma habilidad. Así, la puntuación es dependiente de la dificultad, y no la considera para la estimación de las habilidades. En el modelo de Rasch (e IRT) la estimación de la habilidad es un proceso en el cual se considera la dificultad (la ubicación del ítem en la escala).
 
 
 Ahora veamos un caso más realista, en el cual tenemos un banco de ítems calibrados y administramos formas distintas a un mismo grupo de personas. ¿podemos obtener estimaciones de habilidad que iguales usando ítems distintos?
@@ -178,14 +182,12 @@ Ahora veamos un caso más realista, en el cual tenemos un banco de ítems calibr
 Supongamos que tenemos 80 ítems calibrados con un modelo de Rasch
 
 ```{r}
+set.seed(1222)
 pacman::p_load(mirt, mirtCAT, tidyverse)
 
 theta = matrix(rnorm(300, 0,1),ncol=1)
 d = matrix(rnorm(80, 0, 1.7), ncol=1)
 a = matrix(rep(1,80),ncol=1)
-```
-
-```{r}
 pool_items = simdata(Theta = theta, d=d, a=a, itemtype = "2PL")
 params_md = mirt(data = pool_items, itemtype = "Rasch", SE=T, model = 1)
 ```
@@ -196,7 +198,7 @@ Podemos observar algunas características de nuestros ítems, por ejemplo las cu
 plot(params_md, type="trace", facet_items = F)
 ```
 
-Una forma interesante de ver nuestros ítems es usando un mapa de Wright, que muestra la ubicación de los ítems y la ubicación de las habilidades (estas últimas pueden ser simuladas)
+Una forma interesante de ver nuestros ítems es usando un mapa de B. Wright, que muestra la ubicación de los ítems y la ubicación de las habilidades (estas últimas pueden ser simuladas)
 
 ```{r, message=FALSE, results='hide'}
 library(WrightMap)
@@ -224,6 +226,7 @@ colnames(parametros_pool) = c("a1", "d", "g", "u") ## hay que cambiar el nombre 
 Vamos armar 4 formas distintas de pruebas:
 
 ```{r}
+set.seed(1111)
 items_imp = parametros_pool[seq(1,80,2),] ## impares
 items_par = parametros_pool[seq(2,80,2),] ## pares
 
@@ -287,8 +290,6 @@ items_Faciles = pool_items[,items_faciles]
 ```
 
 
-Primero veamos la estimación de habilidad obtenida usando todos los ítems:
-
 
 ```{r}
 fscore_imp = fscores(object  =model_imp, response.pattern=items_impares, full.scores = F, method = "EAP")[,c("F1")]
@@ -310,7 +311,7 @@ corrmorant::corrmorant(fscores)
 ```
 
 
-Lo primero que notamos es que la selección de ítems para los ítems fáciles fue muy mal realizada, unos pocos ítems de mayor dificultad seguramente hubiesen evitado el efecto techo que estamos encontrando. La selección de ítems de mayor dificultad logró un buen resultado, puesto que agregando 10 ítems de mayor facilidad evitamos un efecto piso. El mapa de Wright fue útil para evitar este problema. Podemos ver también para qué personas obtuvimos mayor presición. 
+Lo primero que notamos es que la selección de ítems para los ítems fáciles fue muy mal realizada, unos pocos ítems de mayor dificultad seguramente hubiesen evitado el efecto techo que estamos encontrando. La selección de ítems de mayor dificultad logró un buen resultado, puesto que agregando 10 ítems de mayor facilidad evitamos un efecto piso. El mapa de Wright fue útil para evitar este problema. Podemos ver también para qué personas obtuvimos mayor precisión. 
 
 
 ```{r}
@@ -364,9 +365,9 @@ ctt_scores %>%
 ```
 
 
-A nivel de correlación, la asociación es la misma. La única gran diferencia es en el significado del puntaje. En el caso del modelo de Rasch (e IRT) es la misma escala, de modo que estamos comparando a las personas con una misma vara. En el caso del CTT no es la misma escala (podríamos decir que de hecho no hay una escala), de modo que no podemos comparar el puntaje de un/una estudiante que contestó ítems difíciles con el que contextó ítems fáciles. En CTT tenemos únicamente un puntaje total que corresponde a cantidad de correctas o una suma, lo cual nos sitúa en una posición observacional respecto al objeto que queremos medir. Podemos constatar que alguien contesta más preguntas que otra persona; que alguien saca más puntos y que alguien saca menos. Sabemos que quello es dependiente de la prueba, de modo que el sacar más o menos depende y es producto de la dificultad de la prueba. En el caso del ejemplo anterior, podemos ver que, de hecho, cuando los ítems son difíciles, la proporción de respuestas correctas baja y por tanto existe una subestimación sistemática de la proporción de correctas respecto a lo que obtendría la persona si contestara el total de los ítems. Lo mismo pero en sentido inverso ocurre cuando se contestan ítems fáciles. El problema de ello radica en que el nivel de dificultad de la prueba genera puntajes sistemáticamete distintos entre formas que no son estrictamente equivalentes. Cuando observamos la forma conformada por ítems pares e impares, obtenemos un muestreo aleatorio de ítems que resultan tener dificultad similar al total de ítems. El problema ocurre cuando no tenemos formas similares, y en muchos casos no podemos aplicar formas similares o no queremos tenerlas, o bien no queremos que un asunto problemático.
+A nivel de correlación, la asociación es la misma. La única gran diferencia es en el significado del puntaje. En el caso del modelo de Rasch (e IRT) es la misma escala, de modo que estamos comparando a las personas con una misma vara. En el caso del CTT no es la misma escala (podríamos decir que de hecho no hay una escala), de modo que no podemos comparar el puntaje de un/una estudiante que contestó ítems difíciles con el que contestó ítems fáciles. En CTT tenemos únicamente un puntaje total que corresponde a cantidad de correctas o una suma, lo cual nos sitúa en una posición observacional respecto al objeto que queremos medir. Podemos constatar que alguien contesta más preguntas que otra persona; que alguien saca más puntos y que alguien saca menos. Sabemos que quello es dependiente de la prueba, de modo que el sacar más o menos depende y es producto de la dificultad de la prueba. En el caso del ejemplo anterior, podemos ver que, de hecho, cuando los ítems son difíciles, la proporción de respuestas correctas baja y por tanto existe una subestimación sistemática de la proporción de correctas respecto a lo que obtendría la persona si contestara el total de los ítems. Lo mismo pero en sentido inverso ocurre cuando se contestan ítems fáciles. El problema de ello radica en que el nivel de dificultad de la prueba genera puntajes sistemáticamete distintos entre formas que no son estrictamente equivalentes. Cuando observamos la forma conformada por ítems pares e impares, obtenemos un muestreo aleatorio de ítems que resultan tener dificultad similar al total de ítems. El problema ocurre cuando no tenemos formas equivalentes entre dos tests, cuestión que puede ocurrir en muchos casos.
 
-La independencia entre la habilidad estimada y el instrumento utilizado para medirla, permite medir utilizando técnicas computacionales, como las pruebas adaptativas. 
+La independencia entre la habilidad estimada y el instrumento utilizado para medirla, permite medir de forma equivalente a personas que no contestan los mismos ítems, pudiendo optimizar la medición utilizando técnicas computacionales, como las pruebas adaptativas. 
 
 
 
@@ -377,42 +378,28 @@ La independencia entre la habilidad estimada y el instrumento utilizado para med
 
 En el caso de la CTT nos interesa tener una muestra representativa para calcular los parámetros de los ítems. En el caso del modelo de Rasch (e IRT) eso no es así, y deberíamos poder calcular los parámetros de los ítems con distintas muestras, que a su vez no son comparables en términos de su habilidad. Los parámetros de los ítems debieran ser linealmente dependientes o consistentes, de lo contrarío encontraríamos sesgo (mide de forma distinta a distintos grupos). Como corresponden a distintas calibraciones, lo que veremos es si los parámetros son consistentes o no.
 
-La **consistencia** se produce cuando dos escalas son equivalentes bajo una transformación lineal, tal como es el cambio de libras a kilógramos, o de millas a metros. La posibilidad de tener invarianza en la estimación de parámetros bajo una transformación lineal es una propiedad vital, porque permite generar bancos de ítems con distintas muestras, a través de un proceso de linking. En el modelo de Rasch, como mantenemos el **logit** como unidad de medida (las distancias entre ítems y personas, o entre personas, debende únicamente de la ubicación en la escala), el tipo de linking que se utiliza es el mean-mean (resta de promedios). Existen otras formas de linking, pero modifican la unidad de medida, y por tanto, no salimos de la filosofía del modelo de Rasch.
+La **consistencia** se produce cuando dos escalas son equivalentes bajo una transformación lineal, tal como es el cambio de libras a kilógramos, o de millas a metros. La posibilidad de tener invarianza en la estimación de parámetros bajo una transformación lineal es una propiedad vital, porque permite generar bancos de ítems con distintas muestras, a través de un proceso de linking. En el modelo de Rasch, como mantenemos el **logit** como unidad de medida (las distancias entre ítems y personas, o entre personas, debende únicamente de la ubicación en la escala), el tipo de linking que se utiliza es el mean-mean (resta de promedios). Existen otras formas de linking, pero modifican la unidad de medida, y por tanto, abandonamos la filosofía del modelo de Rasch.
 
 Hay que considerar que el linking descansa en esta característica: la posibilidad de tener parámetros consistentes (linealmente dependientes) puesto que nos interesa preservar la distancia de los ítems en cada calibración.
 
 Asumamos que tenemos personas con distinto nivel de habilidad y que van a rendir los mismos ítems:
 
-```{r}
+```{r, results='hide'}
 set.seed(101)
 n=30
-a1 = matrix(rep(1, n),ncol=1)
+a1 = matrix(rep(1, n),ncol=1) ## parámetros de los ítems y de ambos grupos de habilidad
 d1 = matrix(rnorm(n, 0, 1),ncol=1)
 thet = matrix(rnorm(400, 0, 1), ncol=1)
 thet2 = matrix(rnorm(400, 1, 1.6), ncol=1)
-```
-
-
-```{r, results='hide'}
-dat_bh = mirt::simdata(a=a1, d=d1, Theta = thet, itemtype = "2PL")
+dat_bh = mirt::simdata(a=a1, d=d1, Theta = thet, itemtype = "2PL") ## simular datos
 dat_ah = mirt::simdata(a=a1, d=d1, Theta = thet2, itemtype = "2PL")
-```
-
-
-
-```{r, results='hide'}
-model_bh = mirt(dat_bh, itemtype = "Rasch", model=1)
+model_bh = mirt(dat_bh, itemtype = "Rasch", model=1) ## estimar modelos (calibración)
 model_ah = mirt(dat_ah, itemtype = "Rasch", model=1)
-```
-
-
-
-```{r}
-it_pars_bh = coef(model_bh, simplify = T, IRTpars = T)$items[,2]
+it_pars_bh = coef(model_bh, simplify = T, IRTpars = T)$items[,2] ## extraer coeficientes.
 it_pars_ah = coef(model_ah, simplify = T, IRTpars = T)$items[,2]
 
 data.frame(cbind(baja=it_pars_bh, alta=it_pars_ah)) %>% ggplot(aes(x=baja, y=alta)) + geom_point() +
-  stat_cor(method = "pearson", label.x = 1, label.y = 2) + geom_smooth()
+  stat_cor(method = "pearson", label.x = 1, label.y = 2) + geom_smooth() + theme_bw()
 ```
 
 Observamos la línea recta que buscábamos. Veamolos en una tabla:
@@ -444,8 +431,7 @@ kable(data.frame(cbind(baja=it_pars_bh, alta=it_pars_ah, alta_rescaled = it_pars
 ```
 
 
-
-Podemos observar que hay algún tipo de dependencia entre la estimación de parámetros en el modelo de Rasch y la habilidad de la muestra. No pretendemos lograr un ajuste absoluto, pero sí a un nivel que nos de un grado de seguridad adecuado, pensando en que siempre, cuando estimamos parámetros con distintas muestras, obtenemos algún grado de diferencia. 
+Podemos observar que hay algún tipo de dependencia entre la estimación de parámetros en el modelo de Rasch y la habilidad de la muestra. No pretendemos lograr un ajuste absoluto, pero sí un nivel que nos de un grado de seguridad adecuado, pensando en que siempre, cuando estimamos parámetros con distintas muestras, obtenemos algún grado de diferencia. 
 
 ### ¿Qué aplicación práctica tiene esta propiedad?
 
@@ -453,7 +439,7 @@ Son dos:
 
 1.- Ampliar bancos de ítems a través de la estimación de parámetros de nuevos ítems, una vez que se tiene calibrado un número específico de ítems. Así podemos ir ampliando nuestro banco de ítems y modificando nuestros instrumentos.
 
-2.- Comparar muestras distintas, que contestan a su vez, ítems distintos (aunque no todos sean distintos). Esto se llama escalamiento vertical. **Vertical scaling** busca hacer comparables a través de diferente grados educacionales por ejemplo, o hacer comparable los puntajes de un mismo grupo que cambia en su nivel de habilidad debido a una intervención. Es decir, un grupo es sistemáticamente distinto a otro grupo, aunque este grupo sean los mismos sujetos que se han movido en su nivel de habilidad.
+2.- Comparar muestras distintas, que contestan a su vez ítems distintos (aunque no todos sean distintos). Esto se llama escalamiento vertical. El **Vertical scaling** busca hacer comparables mediciones obtenidas con grupos de ítems diferentes, manteniendo un grupo de ítems en común (ítems ancla). La diferencia de los ítems utilizados radica en que los grupos medidos son sistemáticamente distintos en términos de su habilidad, ya que pertenecen a niveles educacionales distintos, o están en una distinta posición en un sistema de formación, en que hay una gradualidad en la complejidad de los aprendizajes (ej. estudiantes de primer y último año de una universidad).
 
 
 # Vertical scaling:
@@ -495,6 +481,7 @@ kable(set_items2)
 Ahora, hagamos la simulación de los datos:
 
 ```{r}
+set.seed(12345)
 library(mirt)
 theta = matrix(rnorm(400, 0, 1),ncol=1)
 theta2 = matrix(rnorm(400, 1, 1.5), ncol=1)
@@ -532,7 +519,7 @@ beta2 = coef(params_test2, IRTpars = T, simplify = T)$items[,2]
 knitr::kable(data.frame(cbind(beta1, beta2)))
 ```
 
-Los ítems ancla no tienen los mismos parámetros, porque las personas que contestaron los ítems son distintas. Lo podemos verlo con un mapa de Wright.
+Los ítems ancla no tienen los mismos parámetros, porque las personas que contestaron los ítems son distintas. Lo podemos ver con un mapa de Wright.
 
 ```{r}
 f_score_test1 = fscores(params_test1)[,"F1"]
@@ -587,12 +574,12 @@ eq_vert = alldirec(mods = modelo_eq_rasch, method = "mean-mean")
 summary(eq_vert)
 ```
 
-Nuestro valor **B** es .94791, lo cual indica que podemos poner los ítems en la misma escala (en términos del primer test) sumando el valor anterior a los parámetros y a los valores theta obtenidos en el test 2. Al sumar .94 a los parámetros del test 2 obtenemos los siguientes:
+Nuestro valor **B** es .94106, lo cual indica que podemos poner los ítems en la misma escala (en términos del primer test) sumando el valor anterior a los parámetros y a los valores theta obtenidos en el test 2. Al sumar .94 a los parámetros del test 2 obtenemos los siguientes:
 
 
 
 ```{r}
-B = .94791
+B = .94106
 params_test2_corregido = coef(params_test2, IRTpars = T, simplify=T)$items[,2] + B
 kable(data.frame(cbind(anchor1, params_test2_corregido[n_anchor])))
 ```

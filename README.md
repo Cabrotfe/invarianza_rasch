@@ -5,9 +5,9 @@ Análisis de propiedad de invarianza en modelos de Rasch
 
 ¿Qué es medir en psicología? Para intentar contestar esta pregunta deberíamos ver qué propiedades tiene la medición:
 
-**Sistema intervalar:** sistema de asignación de números que contiene una unidad de medida y el 0 es arbitrario. Podemos pensar este sistema como una escala o línea, en la que podemos ubicar una propiedad de un objeto. En este caso ya hablamos de medición pues se preserva una característica fundamental, que es la constancia de las diferencias de unidades en la escala. La diferencia entre 1 y 3 es igual a la diferencia de 3 y 5. Esto ocurre con la medida de temperatura, en que la diferencia entre 5 y 10 grados es igual a la de 10 y 15, para la variable de interés. Sin embargo, en este tipo de mecanismo de asignación de números, no es aplicable la razones, de modo que no es posible decir que 20 grados es el doble que 10 grados. Esto es porque el 0 es arbitrario, y no indica ausencia del atributo. Como veremos, esta característica es exclusiva del modelo de Rasch, y lo distingue de otros modelos IRT (2PL y 3 PL).
+**Sistema intervalar:** sistema de asignación de números que contiene una unidad de medida y el 0 es arbitrario. Podemos pensar este sistema como una escala o línea, en la que podemos ubicar una propiedad de un objeto. En este caso ya hablamos de medición pues se preserva una característica fundamental, que es la constancia de las diferencias de unidades en la escala. La diferencia entre 1 y 3 es igual a la diferencia de 3 y 5. Esto ocurre con, por ejemplo, la medida de temperatura, en que la diferencia entre 5 y 10 grados es igual a la de 10 y 15, para la variable de interés. Sin embargo, en este tipo de mecanismo de asignación de números, no son aplicables las razones (dividir un número por otro), de modo que no es posible decir que 20 grados es el doble que 10 grados. Esto es porque el 0 es arbitrario, y no indica ausencia del atributo. Como veremos, esta característica es exclusiva del modelo de Rasch, y lo distingue de otros modelos IRT (2PL y 3 PL).
 
-**Independencia:** la otra característica de la medición, relacionada a lo anterior, es que la propiedad medida es independiente al objeto usado para su medición. La distancia entre las unidades de medida (de la escala) respecto a un objeto (en este caso el atributo de la persona) no depende del objeto de comparación (de la persona). Del mismo modo, la distancia entre dos variables (propiedades) medidas entre objetos no dependen de la unidad de medida del instrumento de medición.
+**Independencia:** la otra característica de la medición, relacionada a lo anterior, es que la propiedad medida es independiente al objeto usado para su medición. La ubicación en la escala de la propiedad (atributo) de un objeto (de una persona) no depende del instrumento utilizado, sino que es independiente de este. Así, se puede demostrar que es posible dar la misma ubicación en la escala a una persona utilizando distintos instrumentos, siempre y cuando estos instrumentos estén calibrados en la misma escala (estén midiendo el mismo constructo). Del mismo modo, la distancia entre dos ítems (elementos de la escala) no depende del atributo de las personas que se utilisen para establecer esta distancia o diferencia. Dos ítems están a dos logits de distancia, para cualquier persona medida o grupo utilizado para establecer esta distancia.
 
 **Linealidad:** debe poder expresarse en una línea que indica la ubicación del objeto medido.
 
@@ -19,7 +19,11 @@ Veamos cómo el modelo de Rasch permite medir y en qué sentido la TCT no permit
 
 ## Invarianza de los parámetros de las personas:
 
-Dado un nivel de habilidad, el modelo de Rasch (y el IRT) permite estimar ese nivel de habilidad usando distintos ítems, debido a que considera la dificultad (y la discriminación) o ubicación de los ítems al hacer la medición. Así, no es lo mismo para estimar la habilidad contestar ítems fáciles que difíciles, y puede ser que, por ejemplo, al contestar 4 ítems difíciles sea equivalente a contestar 12 fáciles. Para ello debo estimar la habilidad considerando la ubicación de los ítems. ¿Para qué sirve esto? Sirve para estimar la habilidad usando distintos ítems, incluso si estos no son versiones paralelas o utilizan distinto número de ítems o incluso un número variable de ítems. Veamos un ejemplo:
+Dado un nivel de habilidad, el modelo de Rasch (y el IRT) permite estimar ese nivel de habilidad usando distintos ítems, debido a que considera la dificultad (y la discriminación) o ubicación de los ítems al hacer la estimación de la habilidad (estimación de la ubicación del atributo en una escala). Así, no es lo mismo para estimar la habilidad contestar ítems fáciles que difíciles, y puede ser que, por ejemplo, contestar 4 ítems difíciles sea equivalente a contestar 12 fáciles. Para ello se debe estimar la habilidad considerando la ubicación de los ítems.
+
+¿Para qué sirve esto?
+
+Sirve para estimar la habilidad usando distintos ítems, incluso si estos no son versiones paralelas. También permite estimar habilidades de forma equivalente (bajo una misma escala) pero usando un número diferente de ítems. Veamos un ejemplo:
 
 Supongamos que las personas contestan dos formas de una pruena, pero una es fácil y otra difícil:
 
@@ -1681,7 +1685,7 @@ Mean inter-item-correlation=0.167 · Cronbach's α=0.771
 </td>
 </tr>
 </table>
-Para ello podemos hacer un gráfico de Guttman:
+Para ello podemos graficar la Curva Característica Empírica del Ítem:
 
 ``` r
 empirical_plot(prueba_facil, which.items=1:n, main = "Prueba fácil")
@@ -1709,7 +1713,7 @@ Los sujetos tienen la misma habilidad (son los mismos sujetos) pero contestaron 
 
 ``` r
 data.frame(cbind(facil = fscores(mod_p_facil)[,1], dificil = fscores(mod_p_dificil)[,1])) %>% 
-  ggplot(aes(x=facil, y=dificil)) + geom_point() + geom_smooth()
+  ggplot(aes(x=facil, y=dificil)) + geom_point() + geom_smooth() + theme_bw()
 ```
 
 ![](README_files/figure-markdown_github/unnamed-chunk-6-1.png)
@@ -1718,16 +1722,16 @@ Veamos qué pasa si sumamos los puntajes:
 
 ``` r
 data.frame(facil = rowSums(prueba_facil) , dificil= rowSums(prueba_dificil) ) %>% 
-  ggplot(aes(x=facil, y=dificil)) + geom_point() + geom_smooth()
+  ggplot(aes(x=facil, y=dificil)) + geom_point() + geom_smooth() + theme_bw()
 ```
 
 ![](README_files/figure-markdown_github/unnamed-chunk-7-1.png)
 
-Lo que ocurre es que los puntajes obtenidos con un instrumento no mantienen la forma lineal respecto a los puntajes obtenidos con otro instrumento. Por ejemplo, la diferencia entre obtener 0 a 10 puntos, en la prueba difícil, equivale a obtener una diferencia de 0 a 5 puntos, aproximadamente en la prueba difícil. En cambio, una diferencia de 20 a 30 puntos equivale a una diferencia de más o menos 8 puntos en la prueba difícil.
+Lo que ocurre es que los puntajes obtenidos con un instrumento no mantienen la forma lineal respecto a los puntajes obtenidos con otro instrumento. Por ejemplo, la diferencia entre obtener 0 a 10 puntos, en la prueba difícil, equivale a obtener una diferencia de 0 a 5 puntos, aproximadamente en la prueba difícil. En cambio, una diferencia de 20 a 30 puntos equivale a una diferencia de más o menos 8 puntos en la prueba difícil. Sí bien podemos observar que en el modelo de Rasch obtenemos una tendencia lineal, no observamos una línea recta de puntos. Esto nos advierte sobre otro asunto, que ningún modelo puede soslayar: "la presencia de error de medición".
 
 ## Segundo ejemplo, con más ítems:
 
-Para mostrar la propiedad de invarianza (la no dependencia) de la propiedad medida respecto al objeto medido, vamos a poner una situación más favorable (más estable), en la que hay más información. En este caso, más ítems es más información (mayor certeza de la ubicación de las personas o bien de su puntaje total) para cada uno de los tests
+Para mostrar la propiedad de invarianza (la no dependencia) de la propiedad medida respecto al objeto medido, vamos a poner una situación más favorable (más estable, y con menor error de medición), en la que hay más información. En este caso, más ítems es más información (mayor certeza de la ubicación de las personas o bien de su puntaje total) para cada uno de los tests
 
 ``` r
 set.seed(10)
@@ -1739,6 +1743,7 @@ thet = matrix(rnorm(400, 0, 1), ncol=1)
 ```
 
 ``` r
+set.seed(1238)
 prueba_facil=simdata(Theta = thet, a=a1, d=d1, itemtype = "2PL")
 prueba_dificil=simdata(Theta = thet, a=a1, d=d2, itemtype = "2PL")
 ```
@@ -1753,27 +1758,27 @@ mod_p_facil = mirt(model=1, itemtype = "Rasch", data=prueba_facil, SE=T)
 mod_p_dificil = mirt(model=1, itemtype = "Rasch", data=prueba_dificil, SE=T)
 ```
 
-Si tenemos 150 ítems en cada una de las pruebas, es claro lo que ocurre. El modelo de Rasch permite obtener medidas consistentes, en donde lo que cambia es la escala de medida pero no la ubicación de los individuos relativa a esa escala. Así, tal como cuando medimos en grados celsius o grados fahrenheit estamos midiendo la misma propiedad en escalas equivalentes, en el caso de un modelo de Rasch, bien ajustado, nos permite observar la misma relación.
+Si tenemos 150 ítems en cada una de las pruebas, es claro lo que ocurre. El modelo de Rasch permite obtener medidas equivalentes, en donde lo que cambia es la parte de la escala de medida que estamos utilizando, pero no la escala en sí. La ubicación de los individuos es la misma.
 
 ``` r
 data.frame(cbind(facil = fscores(mod_p_facil)[,1], dificil = fscores(mod_p_dificil)[,1])) %>% 
   ggscatter(x="facil", y = "dificil")+
-  stat_cor(method = "pearson", label.x = 0, label.y = 3) + geom_smooth()
+  stat_cor(method = "pearson", label.x = 0, label.y = 3) + geom_smooth() + theme_bw()
 ```
 
 ![](README_files/figure-markdown_github/unnamed-chunk-12-1.png)
 
-En el caso de los puntajes observados, lo que ocurre queda demostrado con mayor evidencia. La distancia entre los puntajes en una escala no son equivalentes a los de otra escala. Esta falta de equivalencia impide, por ejemplo, hacer comparaciones utilizando distintos ítems para evaluar distintas personas.
+En el caso de los puntajes observados, lo que ocurre queda demostrado con mayor evidencia. La distancia entre los puntajes en una escala no son equivalentes a los de otra escala. Esta falta de equivalencia impide, por ejemplo, hacer comparaciones utilizando distintos ítems para evaluar a distintas personas.
 
 ``` r
 data.frame(facil = rowSums(prueba_facil) , dificil= rowSums(prueba_dificil) ) %>% 
   ggscatter(x="facil", y = "dificil") +
-  stat_cor(method = "pearson", label.x = 20, label.y = 60) + geom_smooth()
+  stat_cor(method = "pearson", label.x = 20, label.y = 60) + geom_smooth() + theme_bw()
 ```
 
 ![](README_files/figure-markdown_github/unnamed-chunk-13-1.png)
 
-Lo que estamos mostrando en el caso del modelo de Rasch, es que podemos calibrar distintos ítems (construir escalas) con pruebas distintas y obtener escalas equivalentes. En este caso, las habilidades de los sujetos son las mismas y ello genera que las escalas de medida estén corridas respecto a la misma muestra (una tiene parámetros de dificultad más altos), y ello genera que en la estimación de la habilidad, la ubicación de las personas considere esta diferencia de dificultad, de modo que el modelo permite ubicar a la persona en el mismo lugar (o en un lugar cercano a) el lugar determinado por la otra escala (de la prueba fácil, que corresponde a otra calibración).
+Lo que estamos mostrando en el caso del modelo de Rasch, es que podemos calibrar distintos ítems (construir escalas) con pruebas distintas y obtener escalas equivalentes. En este caso, las habilidades de los sujetos son las mismas y ello genera que las escalas de medida estén construidas respecto a la misma muestra, aunque con distintos parámetros y ubicaciones (una tiene parámetros de dificultad más altos). Ello genera que en la estimación de la habilidad, el proceso de ubicar a las personas en la escala considere esta diferencia de dificultad, de modo que el modelo permite ubicar a la persona en el mismo lugar (o en un lugar cercano) que aquel determinado por la otra escala (de la prueba fácil, que corresponde a otra calibración).
 
 ``` r
 data.frame(cbind(facil = fscores(mod_p_facil)[,1], dificil =fscores(mod_p_dificil)[,1])) %>% gather(key=prueba, value=medición) %>% ggdensity(x="medición",fill = "prueba", add = "mean") + labs(title="Distribución de habilidades usando modelo de Rasch")
@@ -1789,7 +1794,7 @@ data.frame(facil = rowSums(prueba_facil) , dificil= rowSums(prueba_dificil) ) %>
 
 ![](README_files/figure-markdown_github/unnamed-chunk-15-1.png)
 
-Lamentablemente en este último caso vemos que los puntajes se distribuyen de modos diferentes dependiendo de la prueba de que se rinde, a pesar de que las personas tienen la misma habilidad. Así, la puntuación es dependiente de la dificultad, y no la considera para la estimación de las habilidades. En el modelo de Rasch (e IRT) la estimación de la habilidad es un proceso en el cual se considera la dificultad (la ubicación del ítem en la escala) de modo que la ubicación del atributo medido se determina considerando la ubicación de los ítems.
+Lamentablemente en este último caso vemos que los puntajes se distribuyen de modos diferentes dependiendo de la prueba de que se rinde, a pesar de que las personas tienen la misma habilidad. Así, la puntuación es dependiente de la dificultad, y no la considera para la estimación de las habilidades. En el modelo de Rasch (e IRT) la estimación de la habilidad es un proceso en el cual se considera la dificultad (la ubicación del ítem en la escala).
 
 Ahora veamos un caso más realista, en el cual tenemos un banco de ítems calibrados y administramos formas distintas a un mismo grupo de personas. ¿podemos obtener estimaciones de habilidad que iguales usando ítems distintos?
 
@@ -1798,27 +1803,28 @@ Ahora veamos un caso más realista, en el cual tenemos un banco de ítems calibr
 Supongamos que tenemos 80 ítems calibrados con un modelo de Rasch
 
 ``` r
+set.seed(1222)
 pacman::p_load(mirt, mirtCAT, tidyverse)
 
 theta = matrix(rnorm(300, 0,1),ncol=1)
 d = matrix(rnorm(80, 0, 1.7), ncol=1)
 a = matrix(rep(1,80),ncol=1)
-```
-
-``` r
 pool_items = simdata(Theta = theta, d=d, a=a, itemtype = "2PL")
 params_md = mirt(data = pool_items, itemtype = "Rasch", SE=T, model = 1)
 ```
 
     ## 
-    Iteration: 1, Log-Lik: -11649.482, Max-Change: 0.15764
-    Iteration: 2, Log-Lik: -11645.995, Max-Change: 0.03211
-    Iteration: 3, Log-Lik: -11645.768, Max-Change: 0.00960
-    Iteration: 4, Log-Lik: -11645.751, Max-Change: 0.00349
-    Iteration: 5, Log-Lik: -11645.745, Max-Change: 0.00132
-    Iteration: 6, Log-Lik: -11645.745, Max-Change: 0.00040
-    Iteration: 7, Log-Lik: -11645.745, Max-Change: 0.00015
-    Iteration: 8, Log-Lik: -11645.745, Max-Change: 0.00009
+    Iteration: 1, Log-Lik: -11670.202, Max-Change: 0.27545
+    Iteration: 2, Log-Lik: -11668.587, Max-Change: 0.00062
+    Iteration: 3, Log-Lik: -11668.586, Max-Change: 0.00040
+    Iteration: 4, Log-Lik: -11668.586, Max-Change: 0.00033
+    Iteration: 5, Log-Lik: -11668.585, Max-Change: 0.00036
+    Iteration: 6, Log-Lik: -11668.585, Max-Change: 0.00029
+    Iteration: 7, Log-Lik: -11668.584, Max-Change: 0.00019
+    Iteration: 8, Log-Lik: -11668.584, Max-Change: 0.00014
+    Iteration: 9, Log-Lik: -11668.583, Max-Change: 0.00013
+    Iteration: 10, Log-Lik: -11668.583, Max-Change: 0.00014
+    Iteration: 11, Log-Lik: -11668.583, Max-Change: 0.00007
     ## 
     ## Calculating information matrix...
 
@@ -1828,9 +1834,9 @@ Podemos observar algunas características de nuestros ítems, por ejemplo las cu
 plot(params_md, type="trace", facet_items = F)
 ```
 
-![](README_files/figure-markdown_github/unnamed-chunk-18-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-17-1.png)
 
-Una forma interesante de ver nuestros ítems es usando un mapa de Wright, que muestra la ubicación de los ítems y la ubicación de las habilidades (estas últimas pueden ser simuladas)
+Una forma interesante de ver nuestros ítems es usando un mapa de B. Wright, que muestra la ubicación de los ítems y la ubicación de las habilidades (estas últimas pueden ser simuladas)
 
 ``` r
 library(WrightMap)
@@ -1838,7 +1844,7 @@ scores_hab = fscores(params_md)
 wrightMap(thetas = scores_hab, thresholds = coef(params_md, simplify=T, IRTpars = T)$items[,2], show.thr.lab = FALSE, label.items.srt = 45)
 ```
 
-![](README_files/figure-markdown_github/unnamed-chunk-19-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-18-1.png)
 
 Segunda versión, esta vez ordenado.
 
@@ -1847,7 +1853,7 @@ orden = thresholds = coef(params_md, simplify=T, IRTpars = T)$items[,2]
 wrightMap(thetas = scores_hab, thresholds = orden[order(orden)], show.thr.lab = FALSE, label.items.srt = 45, main.title = "Mapa de Wright ordenado")
 ```
 
-![](README_files/figure-markdown_github/unnamed-chunk-20-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-19-1.png)
 
 Esto nos da una idea de que contamos con ítems con diversas ubicaciones, que en teoría nos podrían permitir armar formas diversas que permitan estimar habilidades con igual presición usando distintos ítems.
 
@@ -1862,6 +1868,7 @@ colnames(parametros_pool) = c("a1", "d", "g", "u") ## hay que cambiar el nombre 
 Vamos armar 4 formas distintas de pruebas:
 
 ``` r
+set.seed(1111)
 items_imp = parametros_pool[seq(1,80,2),] ## impares
 items_par = parametros_pool[seq(2,80,2),] ## pares
 
@@ -1886,25 +1893,25 @@ Comparemos la selección de ítems utilizando mapas de Wright:
 wrightMap(thetas = scores_hab, thresholds = sort(items_imp$d*-1),show.thr.lab = FALSE, label.items.srt = 45, main.title = "Mapa de Wright items impares")
 ```
 
-![](README_files/figure-markdown_github/unnamed-chunk-23-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-22-1.png)
 
 ``` r
 wrightMap(thetas = scores_hab, thresholds = sort(items_par$d*-1),show.thr.lab = FALSE, label.items.srt = 45, main.title = "Mapa de Wright items pares")
 ```
 
-![](README_files/figure-markdown_github/unnamed-chunk-24-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-23-1.png)
 
 ``` r
 wrightMap(thetas = scores_hab, thresholds = sort(parametros_faciles$d*-1),show.thr.lab = FALSE, label.items.srt = 45, main.title = "Mapa de Wright items fáciles")
 ```
 
-![](README_files/figure-markdown_github/unnamed-chunk-25-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-24-1.png)
 
 ``` r
 wrightMap(thetas = scores_hab, thresholds = sort(parametros_dificiles$d*-1),show.thr.lab = FALSE, label.items.srt = 45, main.title = "Mapa de Wright items difíciles")
 ```
 
-![](README_files/figure-markdown_github/unnamed-chunk-26-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-25-1.png)
 
 Tenemos 4 formas de pruebas muy distintas, y lo que pretendemos es estimar la habilidad de una misma muestra de personas usando estas 4 formas. ¿Obtendrémos resultados comparables a aquellos obtenidos ocupando el total de las preguntas?
 
@@ -1933,8 +1940,6 @@ items_Dificiles = pool_items[,items_dificiles]
 items_Faciles = pool_items[,items_faciles]
 ```
 
-Primero veamos la estimación de habilidad obtenida usando todos los ítems:
-
 ``` r
 fscore_imp = fscores(object  =model_imp, response.pattern=items_impares, full.scores = F, method = "EAP")[,c("F1")]
 fscore_par = fscores(object  =model_par, response.pattern=items_pares, full.scores = F, method = "EAP")[,c("F1")]
@@ -1951,9 +1956,9 @@ library(corrmorant)
 corrmorant::corrmorant(fscores)
 ```
 
-![](README_files/figure-markdown_github/unnamed-chunk-31-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-30-1.png)
 
-Lo primero que notamos es que la selección de ítems para los ítems fáciles fue muy mal realizada, unos pocos ítems de mayor dificultad seguramente hubiesen evitado el efecto techo que estamos encontrando. La selección de ítems de mayor dificultad logró un buen resultado, puesto que agregando 10 ítems de mayor facilidad evitamos un efecto piso. El mapa de Wright fue útil para evitar este problema. Podemos ver también para qué personas obtuvimos mayor presición.
+Lo primero que notamos es que la selección de ítems para los ítems fáciles fue muy mal realizada, unos pocos ítems de mayor dificultad seguramente hubiesen evitado el efecto techo que estamos encontrando. La selección de ítems de mayor dificultad logró un buen resultado, puesto que agregando 10 ítems de mayor facilidad evitamos un efecto piso. El mapa de Wright fue útil para evitar este problema. Podemos ver también para qué personas obtuvimos mayor precisión.
 
 ``` r
 fscores %>% mutate(dif_imp = F1-fscore_imp,
@@ -1965,14 +1970,14 @@ fscores %>% mutate(dif_imp = F1-fscore_imp,
   geom_hline(yintercept = 0.5) + geom_hline(yintercept = -0.5) + theme_bw()
 ```
 
-![](README_files/figure-markdown_github/unnamed-chunk-32-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-31-1.png)
 
 ``` r
 fscores %>%  
   gather(key=forma, value=valor, 1:5) %>% ggplot(aes(x=valor,color=forma, fill=forma)) + geom_density(alpha=.3)
 ```
 
-![](README_files/figure-markdown_github/unnamed-chunk-33-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-32-1.png)
 
 En todos los casos tenemos algún grado de precisión adecuado. Para la selección de ítems pares e impares, nuestra estimación de la habilidad usando ítems distintos es adecuada, con pocos casos en que el error de estimación de es más de 0.5 logits. En el caso de la selección de ítems mayormente difíciles y unos pocos fáciles, se observa alta precisión para personas con alta habilidad, pero mucha imprecisión para personas con baja habilidad. En el caso de la selección de ítems fáciles, tenemos un serio problema de efecto techo, acrecentándose el error cuando el nivel de habilidad es alto (y no puede distinguirse la persona de otra con un nivel, por ejemplo, medio alto). En este último caso, nos faltaron ítems de mayor dificultad.
 
@@ -1987,7 +1992,7 @@ colnames(ctt_scores) = c("total", "impares", "pares", "difíciles", "fáciles")
 corrmorant(ctt_scores)
 ```
 
-![](README_files/figure-markdown_github/unnamed-chunk-35-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-34-1.png)
 
 Veamos la diferencia entre la proporción obtenida de correctas de las distintas formas respecto a la proporción de respuestas correctas obtenidas en el total de los ítems.
 
@@ -1999,24 +2004,24 @@ ctt_scores %>% mutate(dif_imp = total-impares,
   gather(key=diferencia, value=valor, 2:5) %>% ggplot(aes(x=total, y = valor, color=diferencia)) + geom_point() + facet_wrap(~diferencia)
 ```
 
-![](README_files/figure-markdown_github/unnamed-chunk-36-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-35-1.png)
 
 ``` r
 ctt_scores %>%  
   gather(key=forma, value=valor, 1:5) %>% ggplot(aes(x=valor,color=forma, fill=forma)) + geom_density(alpha=.3)
 ```
 
-![](README_files/figure-markdown_github/unnamed-chunk-37-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-36-1.png)
 
-A nivel de correlación, la asociación es la misma. La única gran diferencia es en el significado del puntaje. En el caso del modelo de Rasch (e IRT) es la misma escala, de modo que estamos comparando a las personas con una misma vara. En el caso del CTT no es la misma escala (podríamos decir que de hecho no hay una escala), de modo que no podemos comparar el puntaje de un/una estudiante que contestó ítems difíciles con el que contextó ítems fáciles. En CTT tenemos únicamente un puntaje total que corresponde a cantidad de correctas o una suma, lo cual nos sitúa en una posición observacional respecto al objeto que queremos medir. Podemos constatar que alguien contesta más preguntas que otra persona; que alguien saca más puntos y que alguien saca menos. Sabemos que quello es dependiente de la prueba, de modo que el sacar más o menos depende y es producto de la dificultad de la prueba. En el caso del ejemplo anterior, podemos ver que, de hecho, cuando los ítems son difíciles, la proporción de respuestas correctas baja y por tanto existe una subestimación sistemática de la proporción de correctas respecto a lo que obtendría la persona si contestara el total de los ítems. Lo mismo pero en sentido inverso ocurre cuando se contestan ítems fáciles. El problema de ello radica en que el nivel de dificultad de la prueba genera puntajes sistemáticamete distintos entre formas que no son estrictamente equivalentes. Cuando observamos la forma conformada por ítems pares e impares, obtenemos un muestreo aleatorio de ítems que resultan tener dificultad similar al total de ítems. El problema ocurre cuando no tenemos formas similares, y en muchos casos no podemos aplicar formas similares o no queremos tenerlas, o bien no queremos que un asunto problemático.
+A nivel de correlación, la asociación es la misma. La única gran diferencia es en el significado del puntaje. En el caso del modelo de Rasch (e IRT) es la misma escala, de modo que estamos comparando a las personas con una misma vara. En el caso del CTT no es la misma escala (podríamos decir que de hecho no hay una escala), de modo que no podemos comparar el puntaje de un/una estudiante que contestó ítems difíciles con el que contestó ítems fáciles. En CTT tenemos únicamente un puntaje total que corresponde a cantidad de correctas o una suma, lo cual nos sitúa en una posición observacional respecto al objeto que queremos medir. Podemos constatar que alguien contesta más preguntas que otra persona; que alguien saca más puntos y que alguien saca menos. Sabemos que quello es dependiente de la prueba, de modo que el sacar más o menos depende y es producto de la dificultad de la prueba. En el caso del ejemplo anterior, podemos ver que, de hecho, cuando los ítems son difíciles, la proporción de respuestas correctas baja y por tanto existe una subestimación sistemática de la proporción de correctas respecto a lo que obtendría la persona si contestara el total de los ítems. Lo mismo pero en sentido inverso ocurre cuando se contestan ítems fáciles. El problema de ello radica en que el nivel de dificultad de la prueba genera puntajes sistemáticamete distintos entre formas que no son estrictamente equivalentes. Cuando observamos la forma conformada por ítems pares e impares, obtenemos un muestreo aleatorio de ítems que resultan tener dificultad similar al total de ítems. El problema ocurre cuando no tenemos formas equivalentes entre dos tests, cuestión que puede ocurrir en muchos casos.
 
-La independencia entre la habilidad estimada y el instrumento utilizado para medirla, permite medir utilizando técnicas computacionales, como las pruebas adaptativas.
+La independencia entre la habilidad estimada y el instrumento utilizado para medirla, permite medir de forma equivalente a personas que no contestan los mismos ítems, pudiendo optimizar la medición utilizando técnicas computacionales, como las pruebas adaptativas.
 
 # Invarianza de los parámetros de los ítems:
 
 En el caso de la CTT nos interesa tener una muestra representativa para calcular los parámetros de los ítems. En el caso del modelo de Rasch (e IRT) eso no es así, y deberíamos poder calcular los parámetros de los ítems con distintas muestras, que a su vez no son comparables en términos de su habilidad. Los parámetros de los ítems debieran ser linealmente dependientes o consistentes, de lo contrarío encontraríamos sesgo (mide de forma distinta a distintos grupos). Como corresponden a distintas calibraciones, lo que veremos es si los parámetros son consistentes o no.
 
-La **consistencia** se produce cuando dos escalas son equivalentes bajo una transformación lineal, tal como es el cambio de libras a kilógramos, o de millas a metros. La posibilidad de tener invarianza en la estimación de parámetros bajo una transformación lineal es una propiedad vital, porque permite generar bancos de ítems con distintas muestras, a través de un proceso de linking. En el modelo de Rasch, como mantenemos el **logit** como unidad de medida (las distancias entre ítems y personas, o entre personas, debende únicamente de la ubicación en la escala), el tipo de linking que se utiliza es el mean-mean (resta de promedios). Existen otras formas de linking, pero modifican la unidad de medida, y por tanto, no salimos de la filosofía del modelo de Rasch.
+La **consistencia** se produce cuando dos escalas son equivalentes bajo una transformación lineal, tal como es el cambio de libras a kilógramos, o de millas a metros. La posibilidad de tener invarianza en la estimación de parámetros bajo una transformación lineal es una propiedad vital, porque permite generar bancos de ítems con distintas muestras, a través de un proceso de linking. En el modelo de Rasch, como mantenemos el **logit** como unidad de medida (las distancias entre ítems y personas, o entre personas, debende únicamente de la ubicación en la escala), el tipo de linking que se utiliza es el mean-mean (resta de promedios). Existen otras formas de linking, pero modifican la unidad de medida, y por tanto, abandonamos la filosofía del modelo de Rasch.
 
 Hay que considerar que el linking descansa en esta característica: la posibilidad de tener parámetros consistentes (linealmente dependientes) puesto que nos interesa preservar la distancia de los ítems en cada calibración.
 
@@ -2025,31 +2030,22 @@ Asumamos que tenemos personas con distinto nivel de habilidad y que van a rendir
 ``` r
 set.seed(101)
 n=30
-a1 = matrix(rep(1, n),ncol=1)
+a1 = matrix(rep(1, n),ncol=1) ## parámetros de los ítems y de ambos grupos de habilidad
 d1 = matrix(rnorm(n, 0, 1),ncol=1)
 thet = matrix(rnorm(400, 0, 1), ncol=1)
 thet2 = matrix(rnorm(400, 1, 1.6), ncol=1)
-```
-
-``` r
-dat_bh = mirt::simdata(a=a1, d=d1, Theta = thet, itemtype = "2PL")
+dat_bh = mirt::simdata(a=a1, d=d1, Theta = thet, itemtype = "2PL") ## simular datos
 dat_ah = mirt::simdata(a=a1, d=d1, Theta = thet2, itemtype = "2PL")
-```
-
-``` r
-model_bh = mirt(dat_bh, itemtype = "Rasch", model=1)
+model_bh = mirt(dat_bh, itemtype = "Rasch", model=1) ## estimar modelos (calibración)
 model_ah = mirt(dat_ah, itemtype = "Rasch", model=1)
-```
-
-``` r
-it_pars_bh = coef(model_bh, simplify = T, IRTpars = T)$items[,2]
+it_pars_bh = coef(model_bh, simplify = T, IRTpars = T)$items[,2] ## extraer coeficientes.
 it_pars_ah = coef(model_ah, simplify = T, IRTpars = T)$items[,2]
 
 data.frame(cbind(baja=it_pars_bh, alta=it_pars_ah)) %>% ggplot(aes(x=baja, y=alta)) + geom_point() +
-  stat_cor(method = "pearson", label.x = 1, label.y = 2) + geom_smooth()
+  stat_cor(method = "pearson", label.x = 1, label.y = 2) + geom_smooth() + theme_bw()
 ```
 
-![](README_files/figure-markdown_github/unnamed-chunk-41-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-37-1.png)
 
 Observamos la línea recta que buscábamos. Veamolos en una tabla:
 
@@ -2146,7 +2142,7 @@ kable(data.frame(cbind(baja=it_pars_bh, alta=it_pars_ah, alta_rescaled = it_pars
 | Item\_29 |  -0.5318551|  -1.3710065|      -0.4753234|
 | Item\_30 |  -0.5318551|  -1.4920111|      -0.5963281|
 
-Podemos observar que hay algún tipo de dependencia entre la estimación de parámetros en el modelo de Rasch y la habilidad de la muestra. No pretendemos lograr un ajuste absoluto, pero sí a un nivel que nos de un grado de seguridad adecuado, pensando en que siempre, cuando estimamos parámetros con distintas muestras, obtenemos algún grado de diferencia.
+Podemos observar que hay algún tipo de dependencia entre la estimación de parámetros en el modelo de Rasch y la habilidad de la muestra. No pretendemos lograr un ajuste absoluto, pero sí un nivel que nos de un grado de seguridad adecuado, pensando en que siempre, cuando estimamos parámetros con distintas muestras, obtenemos algún grado de diferencia.
 
 ### ¿Qué aplicación práctica tiene esta propiedad?
 
@@ -2154,7 +2150,7 @@ Son dos:
 
 1.- Ampliar bancos de ítems a través de la estimación de parámetros de nuevos ítems, una vez que se tiene calibrado un número específico de ítems. Así podemos ir ampliando nuestro banco de ítems y modificando nuestros instrumentos.
 
-2.- Comparar muestras distintas, que contestan a su vez, ítems distintos (aunque no todos sean distintos). Esto se llama escalamiento vertical. **Vertical scaling** busca hacer comparables a través de diferente grados educacionales por ejemplo, o hacer comparable los puntajes de un mismo grupo que cambia en su nivel de habilidad debido a una intervención. Es decir, un grupo es sistemáticamente distinto a otro grupo, aunque este grupo sean los mismos sujetos que se han movido en su nivel de habilidad.
+2.- Comparar muestras distintas, que contestan a su vez ítems distintos (aunque no todos sean distintos). Esto se llama escalamiento vertical. El **Vertical scaling** busca hacer comparables mediciones obtenidas con grupos de ítems diferentes, manteniendo un grupo de ítems en común (ítems ancla). La diferencia de los ítems utilizados radica en que los grupos medidos son sistemáticamente distintos en términos de su habilidad, ya que pertenecen a niveles educacionales distintos, o están en una distinta posición en un sistema de formación, en que hay una gradualidad en la complejidad de los aprendizajes (ej. estudiantes de primer y último año de una universidad).
 
 # Vertical scaling:
 
@@ -2245,6 +2241,7 @@ kable(set_items2)
 Ahora, hagamos la simulación de los datos:
 
 ``` r
+set.seed(12345)
 library(mirt)
 theta = matrix(rnorm(400, 0, 1),ncol=1)
 theta2 = matrix(rnorm(400, 1, 1.5), ncol=1)
@@ -2283,58 +2280,58 @@ knitr::kable(data.frame(cbind(beta1, beta2)))
 
 |               |       beta1|       beta2|
 |:--------------|-----------:|-----------:|
-| Item\_1anc1   |  -0.5139122|  -1.4634575|
-| t1Item\_2     |  -0.8481755|  -3.0897386|
-| Item\_3anc3   |   0.0435231|  -0.9366597|
-| Item\_4anc4   |   0.6705987|  -0.5076498|
-| t1Item\_5     |  -0.6143995|   0.9914437|
-| t1Item\_6     |   1.8044921|  -0.6121024|
-| Item\_7anc7   |  -0.6270878|  -2.0703412|
-| t1Item\_8     |   0.4436718|  -1.2853622|
-| Item\_9anc9   |   0.1756101|  -0.6121024|
-| t1Item\_10    |   0.8145917|   3.5351300|
-| t1Item\_11    |   0.2359485|  -0.2592703|
-| t1Item\_12    |  -1.7661659|   1.7980647|
-| t1Item\_13    |  -0.4395856|  -0.7488842|
-| Item\_14anc14 |  -0.6398068|  -1.5562172|
-| Item\_15anc15 |   0.8012953|  -0.3026638|
-| t1Item\_16    |  -1.0259934|   2.6295556|
-| t1Item\_17    |   0.9640556|  -1.5002387|
-| t1Item\_18    |   0.4066460|  -2.0703412|
-| t1Item\_19    |  -1.0969848|  -0.9686622|
-| Item\_20anc20 |  -0.4027044|  -1.3027682|
-| t1Item\_21    |  -0.8884348|  -0.3026638|
-| Item\_22anc22 |  -1.5667485|  -2.6323535|
-| t1Item\_23    |   0.5559982|   1.5551916|
-| t1Item\_24    |   1.6535498|  -3.5054710|
-| Item\_25anc25 |   1.5299457|   0.5135411|
-| Item\_26anc26 |  -1.6731239|  -3.0897386|
-| t1Item\_27    |   0.4189673|  -1.0496750|
-| t1Item\_28    |  -0.4766490|   1.1172366|
-| t1Item\_29    |  -0.7819812|  -0.4780731|
-| t1Item\_30    |   0.1274972|  -1.6324626|
-| Item\_31anc31 |  -0.8481755|  -1.7911198|
-| Item\_32anc32 |  -2.1690528|  -3.8170793|
-| t1Item\_33    |  -1.8638447|   0.3550709|
-| t1Item\_34    |  -1.5841127|  -3.6535600|
-| t1Item\_35    |  -0.3051161|  -1.5002387|
-| t1Item\_36    |  -0.4890469|  -2.6914909|
-| t1Item\_37    |   0.2844209|  -1.1489655|
-| t1Item\_38    |   1.6902380|   0.3264312|
-| t1Item\_39    |  -1.8241728|  -0.8575798|
-| t1Item\_40    |   0.0914811|  -1.2165515|
-| t1Item\_41    |  -1.1258479|   1.3129808|
-| Item\_42anc42 |   2.2212606|   1.3634859|
-| Item\_43anc43 |   1.0059555|  -0.0156244|
-| Item\_44anc44 |  -0.9980337|  -2.4376847|
-| t1Item\_45    |  -0.7819812|   1.2631455|
-| t1Item\_46    |  -1.4819189|  -1.3732578|
-| t1Item\_47    |   1.2396679|   0.6008849|
-| t1Item\_48    |  -0.6017413|  -3.6026550|
-| t1Item\_49    |  -0.4890469|   0.8082684|
-| t1Item\_50    |   1.1498068|   1.0854722|
+| Item\_1anc1   |  -0.7591935|  -1.6346176|
+| t1Item\_2     |  -0.7857221|  -2.8555798|
+| Item\_3anc3   |   0.1582548|  -0.9597609|
+| Item\_4anc4   |   0.3537043|  -0.3712500|
+| t1Item\_5     |  -0.6546204|   0.9993268|
+| t1Item\_6     |   1.6877222|  -0.6443469|
+| Item\_7anc7   |  -0.7328261|  -1.9310492|
+| t1Item\_8     |   0.3168158|  -1.2980481|
+| Item\_9anc9   |   0.2922963|  -0.7178883|
+| t1Item\_10    |   0.8397526|   3.6262519|
+| t1Item\_11    |  -0.0233335|  -0.1604159|
+| t1Item\_12    |  -1.7268505|   1.7878078|
+| t1Item\_13    |  -0.4765396|  -0.7178883|
+| Item\_14anc14 |  -0.8258336|  -1.5606685|
+| Item\_15anc15 |   0.4903372|  -0.3854231|
+| t1Item\_16    |  -1.0760525|   2.7180842|
+| t1Item\_17    |   0.8667390|  -1.6534035|
+| t1Item\_18    |   0.2922963|  -2.3929896|
+| t1Item\_19    |  -1.1196483|  -0.6006057|
+| Item\_20anc20 |  -0.4265774|  -1.4354578|
+| t1Item\_21    |  -1.0473242|  -0.2865602|
+| Item\_22anc22 |  -1.4454241|  -2.6102494|
+| t1Item\_23    |   0.6684499|   1.4217826|
+| t1Item\_24    |   1.5800430|  -3.3924846|
+| Item\_25anc25 |   1.7062159|   0.6412013|
+| Item\_26anc26 |  -2.0758801|  -2.7910833|
+| t1Item\_27    |   0.2434104|  -1.1984085|
+| t1Item\_28    |  -0.9210532|   1.2866679|
+| t1Item\_29    |  -0.6675663|  -0.7031123|
+| t1Item\_30    |   0.0976461|  -1.4005737|
+| Item\_31anc31 |  -1.0616558|  -1.8895238|
+| Item\_32anc32 |  -2.4263316|  -3.5355902|
+| t1Item\_33    |  -2.3183256|   0.4832668|
+| t1Item\_34    |  -1.6170417|  -3.6392259|
+| t1Item\_35    |  -0.6805464|  -1.5243731|
+| t1Item\_36    |  -0.6417080|  -2.8555798|
+| t1Item\_37    |   0.2068616|  -0.7773568|
+| t1Item\_38    |   1.6332038|   0.3700029|
+| t1Item\_39    |  -1.6530144|  -0.8525793|
+| t1Item\_40    |  -0.1808960|  -1.3149252|
+| t1Item\_41    |  -1.0473242|   1.4738991|
+| Item\_42anc42 |   2.0286337|   1.3704855|
+| Item\_43anc43 |   0.9075793|   0.0624711|
+| Item\_44anc44 |  -0.9348573|  -2.0600438|
+| t1Item\_45    |  -1.1050473|   1.4738991|
+| t1Item\_46    |  -1.5816561|  -1.3832694|
+| t1Item\_47    |   1.3471693|   0.7434334|
+| t1Item\_48    |  -0.6546204|  -2.9921464|
+| t1Item\_49    |  -0.6935616|   0.6122600|
+| t1Item\_50    |   1.3000391|   1.0771676|
 
-Los ítems ancla no tienen los mismos parámetros, porque las personas que contestaron los ítems son distintas. Lo podemos verlo con un mapa de Wright.
+Los ítems ancla no tienen los mismos parámetros, porque las personas que contestaron los ítems son distintas. Lo podemos ver con un mapa de Wright.
 
 ``` r
 f_score_test1 = fscores(params_test1)[,"F1"]
@@ -2349,49 +2346,49 @@ anchor2 = coef(params_test2, IRTpars = T, simplify=T)$items[n_anchor,2]
 WrightMap::wrightMap(thetas = f_score_test1, thresholds = anchor1, show.thr.lab = FALSE, label.items.srt = 45, main.title = "Ítems ancla en test 1")
 ```
 
-![](README_files/figure-markdown_github/unnamed-chunk-53-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-49-1.png)
 
-    ##                     [,1]
-    ## Item_1anc1   -0.51391223
-    ## Item_3anc3    0.04352311
-    ## Item_4anc4    0.67059871
-    ## Item_7anc7   -0.62708776
-    ## Item_9anc9    0.17561015
-    ## Item_14anc14 -0.63980683
-    ## Item_15anc15  0.80129533
-    ## Item_20anc20 -0.40270442
-    ## Item_22anc22 -1.56674845
-    ## Item_25anc25  1.52994569
-    ## Item_26anc26 -1.67312387
-    ## Item_31anc31 -0.84817552
-    ## Item_32anc32 -2.16905279
-    ## Item_42anc42  2.22126059
-    ## Item_43anc43  1.00595553
-    ## Item_44anc44 -0.99803371
+    ##                    [,1]
+    ## Item_1anc1   -0.7591935
+    ## Item_3anc3    0.1582548
+    ## Item_4anc4    0.3537043
+    ## Item_7anc7   -0.7328261
+    ## Item_9anc9    0.2922963
+    ## Item_14anc14 -0.8258336
+    ## Item_15anc15  0.4903372
+    ## Item_20anc20 -0.4265774
+    ## Item_22anc22 -1.4454241
+    ## Item_25anc25  1.7062159
+    ## Item_26anc26 -2.0758801
+    ## Item_31anc31 -1.0616558
+    ## Item_32anc32 -2.4263316
+    ## Item_42anc42  2.0286337
+    ## Item_43anc43  0.9075793
+    ## Item_44anc44 -0.9348573
 
 ``` r
 WrightMap::wrightMap(thetas = f_score_test2, thresholds = anchor2, show.thr.lab = FALSE, label.items.srt = 45, main.title = "Ítems ancla en test 2")
 ```
 
-![](README_files/figure-markdown_github/unnamed-chunk-54-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-50-1.png)
 
-    ##                     [,1]
-    ## Item_1anc1   -1.46345748
-    ## Item_3anc3   -0.93665971
-    ## Item_4anc4   -0.50764981
-    ## Item_7anc7   -2.07034121
-    ## Item_9anc9   -0.61210244
-    ## Item_14anc14 -1.55621723
-    ## Item_15anc15 -0.30266379
-    ## Item_20anc20 -1.30276820
-    ## Item_22anc22 -2.63235351
-    ## Item_25anc25  0.51354111
-    ## Item_26anc26 -3.08973860
-    ## Item_31anc31 -1.79111979
-    ## Item_32anc32 -3.81707931
-    ## Item_42anc42  1.36348590
-    ## Item_43anc43 -0.01562441
-    ## Item_44anc44 -2.43768471
+    ##                    [,1]
+    ## Item_1anc1   -1.6346176
+    ## Item_3anc3   -0.9597609
+    ## Item_4anc4   -0.3712500
+    ## Item_7anc7   -1.9310492
+    ## Item_9anc9   -0.7178883
+    ## Item_14anc14 -1.5606685
+    ## Item_15anc15 -0.3854231
+    ## Item_20anc20 -1.4354578
+    ## Item_22anc22 -2.6102494
+    ## Item_25anc25  0.6412013
+    ## Item_26anc26 -2.7910833
+    ## Item_31anc31 -1.8895238
+    ## Item_32anc32 -3.5355902
+    ## Item_42anc42  1.3704855
+    ## Item_43anc43  0.0624711
+    ## Item_44anc44 -2.0600438
 
 En el test 2 los ítems ancla resultaron más fáciles, lo que típicamente observaríamos en escalamiento vertical.
 
@@ -2405,56 +2402,56 @@ forma1 = import.mirt(params_test1) ## Los extrae ocupando los parámetros como e
 ```
 
     ##              value.d  SE.d
-    ## Item_1anc1     0.514 0.122
-    ## t1Item_2       0.848 0.126
-    ## Item_3anc3    -0.044 0.120
-    ## Item_4anc4    -0.671 0.124
-    ## t1Item_5       0.614 0.123
-    ## t1Item_6      -1.804 0.149
-    ## Item_7anc7     0.627 0.123
-    ## t1Item_8      -0.444 0.122
-    ## Item_9anc9    -0.176 0.120
-    ## t1Item_10     -0.815 0.125
-    ## t1Item_11     -0.236 0.120
-    ## t1Item_12      1.766 0.147
-    ## t1Item_13      0.440 0.121
-    ## Item_14anc14   0.640 0.123
-    ## Item_15anc15  -0.801 0.125
-    ## t1Item_16      1.026 0.128
-    ## t1Item_17     -0.964 0.128
-    ## t1Item_18     -0.407 0.121
-    ## t1Item_19      1.097 0.130
-    ## Item_20anc20   0.403 0.121
-    ## t1Item_21      0.888 0.126
-    ## Item_22anc22   1.567 0.141
-    ## t1Item_23     -0.556 0.122
-    ## t1Item_24     -1.654 0.144
-    ## Item_25anc25  -1.530 0.140
-    ## Item_26anc26   1.673 0.144
-    ## t1Item_27     -0.419 0.121
-    ## t1Item_28      0.477 0.122
-    ## t1Item_29      0.782 0.125
-    ## t1Item_30     -0.127 0.120
-    ## Item_31anc31   0.848 0.126
-    ## Item_32anc32   2.169 0.162
-    ## t1Item_33      1.864 0.150
-    ## t1Item_34      1.584 0.141
-    ## t1Item_35      0.305 0.121
-    ## t1Item_36      0.489 0.122
-    ## t1Item_37     -0.284 0.121
-    ## t1Item_38     -1.690 0.145
-    ## t1Item_39      1.824 0.149
-    ## t1Item_40     -0.091 0.120
-    ## t1Item_41      1.126 0.130
-    ## Item_42anc42  -2.221 0.165
-    ## Item_43anc43  -1.006 0.128
-    ## Item_44anc44   0.998 0.128
-    ## t1Item_45      0.782 0.125
-    ## t1Item_46      1.482 0.138
-    ## t1Item_47     -1.240 0.133
-    ## t1Item_48      0.602 0.123
-    ## t1Item_49      0.489 0.122
-    ## t1Item_50     -1.150 0.131
+    ## Item_1anc1     0.759 0.126
+    ## t1Item_2       0.786 0.126
+    ## Item_3anc3    -0.158 0.121
+    ## Item_4anc4    -0.354 0.122
+    ## t1Item_5       0.655 0.125
+    ## t1Item_6      -1.688 0.145
+    ## Item_7anc7     0.733 0.125
+    ## t1Item_8      -0.317 0.122
+    ## Item_9anc9    -0.292 0.122
+    ## t1Item_10     -0.840 0.127
+    ## t1Item_11      0.023 0.121
+    ## t1Item_12      1.727 0.146
+    ## t1Item_13      0.477 0.123
+    ## Item_14anc14   0.826 0.127
+    ## Item_15anc15  -0.490 0.123
+    ## t1Item_16      1.076 0.131
+    ## t1Item_17     -0.867 0.127
+    ## t1Item_18     -0.292 0.122
+    ## t1Item_19      1.120 0.131
+    ## Item_20anc20   0.427 0.123
+    ## t1Item_21      1.047 0.130
+    ## Item_22anc22   1.445 0.138
+    ## t1Item_23     -0.668 0.125
+    ## t1Item_24     -1.580 0.142
+    ## Item_25anc25  -1.706 0.146
+    ## Item_26anc26   2.076 0.159
+    ## t1Item_27     -0.243 0.122
+    ## t1Item_28      0.921 0.128
+    ## t1Item_29      0.668 0.125
+    ## t1Item_30     -0.098 0.121
+    ## Item_31anc31   1.062 0.130
+    ## Item_32anc32   2.426 0.175
+    ## t1Item_33      2.318 0.170
+    ## t1Item_34      1.617 0.143
+    ## t1Item_35      0.681 0.125
+    ## t1Item_36      0.642 0.124
+    ## t1Item_37     -0.207 0.121
+    ## t1Item_38     -1.633 0.143
+    ## t1Item_39      1.653 0.144
+    ## t1Item_40      0.181 0.121
+    ## t1Item_41      1.047 0.130
+    ## Item_42anc42  -2.029 0.157
+    ## Item_43anc43  -0.908 0.128
+    ## Item_44anc44   0.935 0.128
+    ## t1Item_45      1.105 0.131
+    ## t1Item_46      1.582 0.142
+    ## t1Item_47     -1.347 0.136
+    ## t1Item_48      0.655 0.125
+    ## t1Item_49      0.694 0.125
+    ## t1Item_50     -1.300 0.135
     ## 
     ## NOTE: Use the modIRT function to transform parameters in the usual IRT parameterization
 
@@ -2463,56 +2460,56 @@ forma2 = import.mirt(params_test2)
 ```
 
     ##              value.d  SE.d
-    ## Item_1anc1     1.463 0.156
-    ## t2t1Item_2     3.090 0.209
-    ## Item_3anc3     0.937 0.148
-    ## Item_4anc4     0.508 0.144
-    ## t2t1Item_5    -0.991 0.147
-    ## t2t1Item_6     0.612 0.145
-    ## Item_7anc7     2.070 0.170
-    ## t2t1Item_8     1.285 0.153
-    ## Item_9anc9     0.612 0.145
-    ## t2t1Item_10   -3.535 0.236
-    ## t2t1Item_11    0.259 0.143
-    ## t2t1Item_12   -1.798 0.160
-    ## t2t1Item_13    0.749 0.146
-    ## Item_14anc14   1.556 0.158
-    ## Item_15anc15   0.303 0.143
-    ## t2t1Item_16   -2.630 0.186
-    ## t2t1Item_17    1.500 0.157
-    ## t2t1Item_18    2.070 0.170
-    ## t2t1Item_19    0.969 0.149
-    ## Item_20anc20   1.303 0.154
-    ## t2t1Item_21    0.303 0.143
-    ## Item_22anc22   2.632 0.189
-    ## t2t1Item_23   -1.555 0.155
-    ## t2t1Item_24    3.505 0.232
-    ## Item_25anc25  -0.514 0.143
-    ## Item_26anc26   3.090 0.209
-    ## t2t1Item_27    1.050 0.150
-    ## t2t1Item_28   -1.117 0.148
-    ## t2t1Item_29    0.478 0.144
-    ## t2t1Item_30    1.632 0.160
-    ## Item_31anc31   1.791 0.163
-    ## Item_32anc32   3.817 0.254
-    ## t2t1Item_33   -0.355 0.143
-    ## t2t1Item_34    3.654 0.242
-    ## t2t1Item_35    1.500 0.157
-    ## t2t1Item_36    2.691 0.191
-    ## t2t1Item_37    1.149 0.151
-    ## t2t1Item_38   -0.326 0.143
-    ## t2t1Item_39    0.858 0.148
-    ## t2t1Item_40    1.217 0.152
-    ## t2t1Item_41   -1.313 0.151
-    ## Item_42anc42  -1.363 0.152
-    ## Item_43anc43   0.016 0.142
-    ## Item_44anc44   2.438 0.182
-    ## t2t1Item_45   -1.263 0.150
-    ## t2t1Item_46    1.373 0.155
-    ## t2t1Item_47   -0.601 0.144
-    ## t2t1Item_48    3.603 0.239
-    ## t2t1Item_49   -0.808 0.145
-    ## t2t1Item_50   -1.085 0.148
+    ## Item_1anc1     1.635 0.156
+    ## t2t1Item_2     2.856 0.197
+    ## Item_3anc3     0.960 0.145
+    ## Item_4anc4     0.371 0.140
+    ## t2t1Item_5    -0.999 0.144
+    ## t2t1Item_6     0.644 0.142
+    ## Item_7anc7     1.931 0.163
+    ## t2t1Item_8     1.298 0.149
+    ## Item_9anc9     0.718 0.142
+    ## t2t1Item_10   -3.626 0.246
+    ## t2t1Item_11    0.160 0.139
+    ## t2t1Item_12   -1.788 0.158
+    ## t2t1Item_13    0.718 0.142
+    ## Item_14anc14   1.561 0.154
+    ## Item_15anc15   0.385 0.140
+    ## t2t1Item_16   -2.718 0.190
+    ## t2t1Item_17    1.653 0.156
+    ## t2t1Item_18    2.393 0.177
+    ## t2t1Item_19    0.601 0.141
+    ## Item_20anc20   1.435 0.152
+    ## t2t1Item_21    0.287 0.139
+    ## Item_22anc22   2.610 0.186
+    ## t2t1Item_23   -1.422 0.151
+    ## t2t1Item_24    3.392 0.227
+    ## Item_25anc25  -0.641 0.141
+    ## Item_26anc26   2.791 0.194
+    ## t2t1Item_27    1.198 0.148
+    ## t2t1Item_28   -1.287 0.148
+    ## t2t1Item_29    0.703 0.142
+    ## t2t1Item_30    1.401 0.151
+    ## Item_31anc31   1.890 0.162
+    ## Item_32anc32   3.536 0.237
+    ## t2t1Item_33   -0.483 0.140
+    ## t2t1Item_34    3.639 0.245
+    ## t2t1Item_35    1.524 0.153
+    ## t2t1Item_36    2.856 0.197
+    ## t2t1Item_37    0.777 0.143
+    ## t2t1Item_38   -0.370 0.140
+    ## t2t1Item_39    0.853 0.143
+    ## t2t1Item_40    1.315 0.150
+    ## t2t1Item_41   -1.474 0.152
+    ## Item_42anc42  -1.370 0.150
+    ## Item_43anc43  -0.062 0.139
+    ## Item_44anc44   2.060 0.166
+    ## t2t1Item_45   -1.474 0.152
+    ## t2t1Item_46    1.383 0.151
+    ## t2t1Item_47   -0.743 0.142
+    ## t2t1Item_48    2.992 0.203
+    ## t2t1Item_49   -0.612 0.141
+    ## t2t1Item_50   -1.077 0.145
     ## 
     ## NOTE: Use the modIRT function to transform parameters in the usual IRT parameterization
 
@@ -2541,43 +2538,43 @@ summary(eq_vert)
     ## Method: mean-mean 
     ## Equating coefficients:
     ##   Estimate  StdErr
-    ## A   1.0000 0.00000
-    ## B  -1.1042 0.10394
+    ## A  1.00000 0.00000
+    ## B -0.94106 0.10135
     ## 
     ## 
     ## Link: f2.f1 
     ## Method: mean-mean 
     ## Equating coefficients:
     ##   Estimate  StdErr
-    ## A   1.0000 0.00000
-    ## B   1.1042 0.10394
+    ## A  1.00000 0.00000
+    ## B  0.94106 0.10135
 
-Nuestro valor **B** es .94791, lo cual indica que podemos poner los ítems en la misma escala (en términos del primer test) sumando el valor anterior a los parámetros y a los valores theta obtenidos en el test 2. Al sumar .94 a los parámetros del test 2 obtenemos los siguientes:
+Nuestro valor **B** es .94106, lo cual indica que podemos poner los ítems en la misma escala (en términos del primer test) sumando el valor anterior a los parámetros y a los valores theta obtenidos en el test 2. Al sumar .94 a los parámetros del test 2 obtenemos los siguientes:
 
 ``` r
-B = .94791
+B = .94106
 params_test2_corregido = coef(params_test2, IRTpars = T, simplify=T)$items[,2] + B
 kable(data.frame(cbind(anchor1, params_test2_corregido[n_anchor])))
 ```
 
 |               |     anchor1|          V2|
 |:--------------|-----------:|-----------:|
-| Item\_1anc1   |  -0.5139122|  -0.5155475|
-| Item\_3anc3   |   0.0435231|   0.0112503|
-| Item\_4anc4   |   0.6705987|   0.4402602|
-| Item\_7anc7   |  -0.6270878|  -1.1224312|
-| Item\_9anc9   |   0.1756101|   0.3358076|
-| Item\_14anc14 |  -0.6398068|  -0.6083072|
-| Item\_15anc15 |   0.8012953|   0.6452462|
-| Item\_20anc20 |  -0.4027044|  -0.3548582|
-| Item\_22anc22 |  -1.5667485|  -1.6844435|
-| Item\_25anc25 |   1.5299457|   1.4614511|
-| Item\_26anc26 |  -1.6731239|  -2.1418286|
-| Item\_31anc31 |  -0.8481755|  -0.8432098|
-| Item\_32anc32 |  -2.1690528|  -2.8691693|
-| Item\_42anc42 |   2.2212606|   2.3113959|
-| Item\_43anc43 |   1.0059555|   0.9322856|
-| Item\_44anc44 |  -0.9980337|  -1.4897747|
+| Item\_1anc1   |  -0.7591935|  -0.6935576|
+| Item\_3anc3   |   0.1582548|  -0.0187009|
+| Item\_4anc4   |   0.3537043|   0.5698100|
+| Item\_7anc7   |  -0.7328261|  -0.9899892|
+| Item\_9anc9   |   0.2922963|   0.2231717|
+| Item\_14anc14 |  -0.8258336|  -0.6196085|
+| Item\_15anc15 |   0.4903372|   0.5556369|
+| Item\_20anc20 |  -0.4265774|  -0.4943978|
+| Item\_22anc22 |  -1.4454241|  -1.6691894|
+| Item\_25anc25 |   1.7062159|   1.5822613|
+| Item\_26anc26 |  -2.0758801|  -1.8500233|
+| Item\_31anc31 |  -1.0616558|  -0.9484638|
+| Item\_32anc32 |  -2.4263316|  -2.5945302|
+| Item\_42anc42 |   2.0286337|   2.3115455|
+| Item\_43anc43 |   0.9075793|   1.0035311|
+| Item\_44anc44 |  -0.9348573|  -1.1189838|
 
 Vemos que hay una asociación lineal fuerte, por lo que nos quedamos tranquilos con el resultado del proceso de linking
 
@@ -2585,6 +2582,6 @@ Vemos que hay una asociación lineal fuerte, por lo que nos quedamos tranquilos 
 plot(anchor1, params_test2_corregido[n_anchor])
 ```
 
-![](README_files/figure-markdown_github/unnamed-chunk-60-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-56-1.png)
 
 Los resultados no son exactos, pero podemos aceptar la diferencia encontrada
