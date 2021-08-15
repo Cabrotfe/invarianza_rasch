@@ -19,17 +19,7 @@ Veamos cómo el modelo de Rasch permite medir y en qué sentido la TCT no permit
 
 # Modelo de Rasch
 
-Un modelo estadístico permite explicar el proceso que genera los datos observados, utilizando distribuciones de probabilidad y parámetros. Podría pensarse que las observaciones empíricas son producidas por un proceso que desconocemos, una caja negra. Parte fundamental de la labor en ciencias es preguntatse por el mecanismo que produce los datos observados, y ahí entran en juego las probabilidades y la estadística. En el modelo de Rasch tenemos los siguientes elementos fundamentales:
-
-*Y*<sub>*i**j*</sub> ∼ *B**e**r**n*(*p*)
- Donde:
-
-$$ p = \\textstyle\\frac{e^{b\_i-d\_j} }{1+e^{b\_i-d\_j}}\\ $$
- O:
-
-$$ p = \\frac{1}{1+e^{-(b\_i-d\_j)}} $$
-
-Las respuestas de una persona a un ítem son generadas por una distribución de Bernulli, cuya probabilidad se estima a partir de un parámetro que caracteriza a la persona, y un parámetro que caracteriza al ítem.
+Un modelo estadístico permite explicar el proceso que genera los datos observados, utilizando distribuciones de probabilidad y parámetros. Podría pensarse que las observaciones empíricas son producidas por un proceso que desconocemos, una caja negra. Parte fundamental de la labor en ciencias es preguntatse por el mecanismo que produce los datos observados, y ahí entran en juego las probabilidades y la estadística. Las respuestas de una persona a un ítem son generadas por una distribución de Bernulli, cuya probabilidad se estima a partir de un parámetro que caracteriza a la persona, y un parámetro que caracteriza al ítem.
 
 ## Propiedad fundamental del modelo: la invarianza.
 
