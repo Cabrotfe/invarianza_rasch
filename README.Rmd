@@ -18,18 +18,34 @@ pacman::p_load(mirt, mirtCAT, tidyverse, ggpubr)
 **Sistema intervalar:** sistema de asignación de números que contiene una unidad de medida y el 0 es arbitrario. Podemos pensar este sistema como una escala o línea, en la que podemos ubicar una propiedad de un objeto. En este caso ya hablamos de medición pues se preserva una característica fundamental, que es la constancia de las diferencias de unidades en la escala. La diferencia entre 1 y 3 es igual a la diferencia de 3 y 5. Esto ocurre con, por ejemplo, la medida de temperatura, en que la diferencia entre 5 y 10 grados es igual a la de 10 y 15, para la variable de interés. Sin embargo, en este tipo de mecanismo de asignación de números, no son aplicables las razones (dividir un número por otro), de modo que no es posible decir que 20 grados es el doble que 10 grados. Esto es porque el 0 es arbitrario, y no indica ausencia del atributo. Como veremos, esta característica es exclusiva del modelo de Rasch, y lo distingue de otros modelos IRT (2PL y 3 PL).
 
 **Independencia:** la otra característica de la medición, relacionada a lo anterior, es que la propiedad medida es independiente al objeto usado para su medición. La ubicación en la escala de la propiedad (atributo) de un objeto (de una persona) no depende del instrumento utilizado, sino que es independiente de este. Así, se puede demostrar que es posible dar la misma ubicación en la escala a una persona utilizando distintos instrumentos, siempre y cuando estos instrumentos estén calibrados en la misma escala (estén midiendo el mismo constructo). Del mismo modo, la distancia entre dos ítems (elementos de la escala) no depende del atributo de las personas que se utilisen para establecer esta distancia o diferencia. Dos ítems están a dos logits de distancia, para cualquier persona medida o grupo utilizado para establecer esta distancia.
+La invarianza, concepto utilizado para referirse a esta propiedad, señala que: "los parámetros son idénticos en poblaciones separadas de examinados, o en condiciones de medición diferentes, y esta propiedad es investigada a través de la comparación de la calibración (estimación de parámetros) en dos o más muestras diferentes" (Rupp & Zumbo, 2006).
 
 
 **Linealidad:** debe poder expresarse en una línea que indica la ubicación del objeto medido.
 
-**Significado:** debe entregar un significado. ¿en qué sentido una persona tiene más de un atributo que otra persona? En el modelo de Rasch (e IRT) este significado es la probabilidad de obtener una respuesta dada (condicional a) la ubicación del atributo.
+**Significado:** debe entregar un significado. ¿en qué sentido una persona tiene más de un atributo que otra persona? En el modelo de Rasch (e IRT) este significado es la probabilidad de obtener una respuesta dada (condicional a) la ubicación del atributo y de la ubicación del ítem.
 
-**Generalizable:** debe poder ser usado para decir algo respecto a cómo se comportará esa propiedad respecto a otros instrumentos de medida. Es decir, debe ser generalizable.
+**Generalizable:** debe poder ser usado para decir algo respecto a cómo se comportará una persona, dada su ubicación en la escala, respecto a otros instrumentos o ítems.
 
 
 Veamos cómo el modelo de Rasch permite medir y en qué sentido la TCT no permite hacer medición propiamente tal, y que el modelo de Rasch lo logra.
 
-## Invarianza de los parámetros de las personas:
+
+# Modelo de Rasch
+
+Un modelo estadístico permite explicar el proceso que genera los datos observados, utilizando distribuciones de probabilidad y parámetros. Podría pensarse que las observaciones empíricas son producidas por un proceso que desconocemos, una caja negra. Parte fundamental de la labor en ciencias es preguntatse por el mecanismo que produce los datos observados, y ahí entran en juego las probabilidades y la estadística. En el modelo de Rasch tenemos los siguientes elementos fundamentales:
+
+$$ Y_{ij} \sim Bern(p) $$
+Donde:
+
+$$ p = \textstyle\frac{e^{b_i-d_j} }{1+e^{b_i-d_j}}\ $$
+O:
+
+$$ p = \frac{1}{1+e^{-(b_i-d_j)}} $$
+
+Las respuestas de una persona a un ítem son generadas por una distribución de Bernulli, cuya probabilidad se estima a partir de un parámetro que caracteriza a la persona, y un parámetro que caracteriza al ítem.
+
+## Propiedad fundamental del modelo: la invarianza.
 
 Dado un nivel de habilidad, el modelo de Rasch (y el IRT) permite estimar ese nivel de habilidad usando distintos ítems, debido a que considera la dificultad (y la discriminación) o ubicación de los ítems al hacer la estimación de la habilidad (estimación de la ubicación del atributo en una escala). Así, no es lo mismo para estimar la habilidad contestar ítems fáciles que difíciles, y puede ser que, por ejemplo, contestar 4 ítems difíciles sea equivalente a contestar 12 fáciles. Para ello se debe estimar la habilidad considerando la ubicación de los ítems.
 
@@ -595,6 +611,11 @@ Los resultados no son exactos, pero podemos aceptar la diferencia encontrada
 
 
 
+
+Referencias:
+
+  
+  Rupp, A. A., & Zumbo, B. D. (2006). Understanding Parameter Invariance in Unidimensional IRT Models. *Educational and Psychological Measurement, 66*(1), 63–84. https://doi.org/10.1177/0013164404273942
 
 
 
