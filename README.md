@@ -2107,7 +2107,7 @@ difs = colMeans(data.frame(cbind(baja=it_pars_bh, alta=it_pars_ah)))
 diferencia = difs[1] - difs[2]
 ```
 
-Si restamos 0.8956831 a los parámetros obtenidos por el grupo de alta habilidad obtenemos parámetros similares (no iguales) a los parámetros de la escala del grupo de baja habilidad.
+Si sumamos 0.8956831 a los parámetros obtenidos por el grupo de alta habilidad obtenemos parámetros similares (no iguales) a los parámetros de la escala del grupo de baja habilidad.
 
 ``` r
 kable(data.frame(cbind(baja=it_pars_bh, alta=it_pars_ah, alta_rescaled = it_pars_ah+diferencia)))
